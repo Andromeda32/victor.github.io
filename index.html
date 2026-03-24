@@ -688,6 +688,77 @@
       .skills-grid { grid-template-columns: 1fr; }
       .stat-grid { grid-template-columns: 1fr 1fr; }
     }
+
+    /* ── CERT MODAL ── */
+    .cert-card { cursor: pointer; }
+    .cert-card .cert-view-hint {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--teal-dim);
+      margin-top: 0.5rem;
+      letter-spacing: 0.08em;
+    }
+
+    #cert-modal {
+      display: none;
+      position: fixed; inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    #cert-modal.open { display: flex; }
+
+    .modal-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      width: 100%;
+      max-width: 860px;
+      max-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(0,229,176,0.1);
+    }
+
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.4rem;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .modal-title {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+    }
+
+    .modal-close {
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-size: 1.4rem; line-height: 1;
+      padding: 0 0.2rem;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--teal); }
+
+    .modal-body {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .modal-body iframe {
+      width: 100%; height: 100%;
+      min-height: 75vh;
+      border: none;
+      display: block;
+    }
+
   </style>
 </head>
 <body>
@@ -1011,25 +1082,36 @@
       <div class="section-line"></div>
     </div>
     <div class="cert-grid">
-      <div class="cert-card reveal">
+      <div class="cert-card reveal" data-cert="ecc">
         <div class="cert-icon">🛡️</div>
         <div>
           <div class="cert-name">CEH — Certified Ethical Hacker</div>
-          <div class="cert-meta">EC-Council · Penetration Testing · Offensive Security</div>
+          <div class="cert-meta">EC-Council · CEH · Issued: 20 Feb 2026 · #ECC6741930852</div>
+          <div class="cert-view-hint">▸ click to view certificate</div>
         </div>
       </div>
-      <div class="cert-card reveal">
+      <div class="cert-card reveal" data-cert="katowice">
         <div class="cert-icon">🤖</div>
         <div>
-          <div class="cert-name">Start Your Business Using AI & Low-Code</div>
+          <div class="cert-name">Start Your Business Using AI &amp; Low-Code</div>
           <div class="cert-meta">March 2025 · University of Economics, Katowice</div>
+          <div class="cert-view-hint">▸ click to view certificate</div>
         </div>
       </div>
-      <div class="cert-card reveal">
+      <div class="cert-card reveal" data-cert="concordia">
+        <div class="cert-icon">🤝</div>
+        <div>
+          <div class="cert-name">Concordia Social Projects — Participation</div>
+          <div class="cert-meta">Oct 2022 · Bullying Identification, Prevention &amp; Reporting</div>
+          <div class="cert-view-hint">▸ click to view certificate</div>
+        </div>
+      </div>
+      <div class="cert-card reveal" data-cert="cambridge">
         <div class="cert-icon">🇬🇧</div>
         <div>
           <div class="cert-name">Cambridge B2 First (FCE)</div>
-          <div class="cert-meta">Cambridge Assessment English · 2023 · Further developed during university</div>
+          <div class="cert-meta">Cambridge Assessment English · April 2023 · Score: 160</div>
+          <div class="cert-view-hint">▸ click to view certificate</div>
         </div>
       </div>
     </div>
@@ -1070,6 +1152,59 @@
   <p>Designed & built by <span>Victor Rogoz</span> · 2026 · Brugge, Belgium</p>
 </footer>
 
+
+<!-- CERT MODAL -->
+<div id="cert-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-text">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title-text">Certificate</span>
+      <button class="modal-close" id="modal-close-btn" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <iframe id="cert-iframe" title="Certificate PDF" src=""></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Embedded certificate PDFs (base64)
+  const CERTS = {
+    cambridge: { title: 'Cambridge B2 First — Victor Rogoz',                          path: 'certs/Cambridge.pdf' },
+    ecc:       { title: 'Certified Ethical Hacker — EC-Council',                        path: 'certs/ECC-CEH-Certificate.pdf' },
+    katowice:  { title: 'AI & Low-Code — University of Economics, Katowice',           path: 'certs/Katowice_Low-Code.pdf' },
+    concordia: { title: 'Concordia Social Projects — Certificate of Participation',    path: 'certs/Concordia.pdf' },
+  };
+
+  const modal     = document.getElementById('cert-modal');
+  const iframe    = document.getElementById('cert-iframe');
+  const modalTitle = document.getElementById('modal-title-text');
+  const closeBtn  = document.getElementById('modal-close-btn');
+
+  function openCert(key) {
+    const cert = CERTS[key];
+    if (!cert) return;
+    modalTitle.textContent = cert.title;
+    iframe.src = cert.path;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCert() {
+    modal.classList.remove('open');
+    iframe.src = '';
+    document.body.style.overflow = '';
+  }
+
+  closeBtn.addEventListener('click', closeCert);
+  modal.addEventListener('click', e => { if (e.target === modal) closeCert(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCert(); });
+
+  // Event delegation — works regardless of injection timing
+  document.addEventListener('click', e => {
+    const card = e.target.closest('.cert-card[data-cert]');
+    if (card) openCert(card.dataset.cert);
+  });
+</script>
 
 <script>
   // Nav highlight on scroll
