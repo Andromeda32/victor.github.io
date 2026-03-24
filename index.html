@@ -655,16 +655,23 @@
       50% { opacity: 0; }
     }
 
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
+    @keyframes revealUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: none; }
     }
 
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
+    .reveal {
+      opacity: 0;
+      animation: revealUp 0.6s ease forwards;
     }
+
+    /* stagger siblings */
+    .reveal:nth-child(1) { animation-delay: 0.05s; }
+    .reveal:nth-child(2) { animation-delay: 0.15s; }
+    .reveal:nth-child(3) { animation-delay: 0.25s; }
+    .reveal:nth-child(4) { animation-delay: 0.35s; }
+    .reveal:nth-child(5) { animation-delay: 0.45s; }
+    .reveal:nth-child(6) { animation-delay: 0.55s; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
@@ -759,7 +766,7 @@
           I'm finishing a <strong>Bachelor's in Cybersecurity</strong> at Howest University of Applied Sciences in Bruges, graduating in 2026 — with a <strong>CEH (Certified Ethical Hacker)</strong> already under my belt.
         </p>
         <p>
-          My studies cover the full defensive and offensive spectrum: <strong>Digital Forensics, Network Security, Threat &amp; Risk Assessment, Cybercrime Legislation</strong>, and Secure Programming. I don't just study it — I apply it. My group security audit for a Belgian fire department uncovered OSINT exposure, NIS2/GDPR gaps, and active WordPress vulnerabilities.
+          My studies cover the full offensive and defensive spectrum: <strong>Web &amp; Network Pentesting, Malware Analysis, Reverse Engineering, Cyber Threat Intelligence, Forensics, Cryptography, Linux Server Security</strong>, and Cybercrime Legislation. I don't just study it — I apply it. My group security audit for a Belgian fire department uncovered OSINT exposure, NIS2/GDPR gaps, and active WordPress vulnerabilities.
         </p>
         <p>
           For my final-year internship I'm embedded at the <strong>Ministry of Internal Affairs of Moldova</strong>, helping stand up their Cyber Security Center. My focus is <strong>SIEM operations with FortiSIEM</strong> — writing detection rules, cutting false positives, and building the monitoring foundation for their SOC.
@@ -803,15 +810,19 @@
         <div class="skill-group-title">// Security</div>
         <div class="skill-tags">
           <span class="skill-tag">Penetration Testing</span>
-          <span class="skill-tag">FortiSIEM</span>
+          <span class="skill-tag">Web Pentesting (Adv.)</span>
+          <span class="skill-tag">Network &amp; System Pentesting</span>
+          <span class="skill-tag">Malware Analysis</span>
+          <span class="skill-tag">Reverse Engineering</span>
+          <span class="skill-tag">Cyber Threat Intelligence</span>
+          <span class="skill-tag">Digital Forensics</span>
+          <span class="skill-tag">SIEM / FortiSIEM</span>
           <span class="skill-tag">Burp Suite</span>
           <span class="skill-tag">Wireshark</span>
-          <span class="skill-tag">SIEM Tuning</span>
-          <span class="skill-tag">Network Defense</span>
-          <span class="skill-tag">System Hardening</span>
-          <span class="skill-tag">Risk Assessment</span>
-          <span class="skill-tag">Digital Forensics</span>
+          <span class="skill-tag">Cryptography</span>
+          <span class="skill-tag">Threat &amp; Risk Assessment</span>
           <span class="skill-tag">Web App Security</span>
+          <span class="skill-tag">Cybercrime Law</span>
         </div>
       </div>
       <div class="skill-group reveal">
@@ -832,14 +843,14 @@
       <div class="skill-group reveal">
         <div class="skill-group-title">// Infrastructure</div>
         <div class="skill-tags">
-          <span class="skill-tag">Linux</span>
+          <span class="skill-tag">Linux Server Security</span>
+          <span class="skill-tag">Datacenter Virtualization</span>
           <span class="skill-tag">VMware</span>
+          <span class="skill-tag">Server System Management</span>
+          <span class="skill-tag">Network Infrastructure Security</span>
           <span class="skill-tag">Git</span>
-          <span class="skill-tag">Auth Systems</span>
           <span class="skill-tag">Secure Coding</span>
-          <span class="skill-tag">Linux Forensics</span>
           <span class="skill-tag">AI / Prompt Eng.</span>
-          <span class="skill-tag">Network Analysis</span>
           <span class="skill-tag">Documentation</span>
         </div>
       </div>
@@ -880,17 +891,23 @@
         <div class="timeline-dot"></div>
         <div class="timeline-date">2023 — 2026</div>
         <div class="timeline-title">Bachelor — Applied Computer Science (Cyber Security)</div>
-        <div class="timeline-org">Howest University of Applied Sciences, Brugge</div>
+        <div class="timeline-org">Howest University of Applied Sciences, Brugge · 180 ECTS</div>
         <ul class="timeline-desc">
-          <li>Coursework: Cybercrime Legislation, Digital Forensics, Network Security, Secure Programming.</li>
-          <li>.NET Development, Threat & Risk Assessment, Server System Management.</li>
-          <li>Group security audit for Brandweer Vlaamse Ardennen (NIS2/GDPR compliance, OSINT, WordPress vulns).</li>
+          <li><strong style="color:var(--teal)">Year 1:</strong> Cyber Security Fundamentals, Computer Networks, Web Pentesting Fundamentals, Programming Fundamentals, OOP, Web Development.</li>
+          <li><strong style="color:var(--teal)">Year 2:</strong> Network &amp; System Pentesting, Web Pentesting Advanced, Forensic Analysis, Security Management &amp; Threat/Risk Assessment, Server System Management, OO Architectures &amp; Secure Development, Cybercrime, Web Technology Security &amp; Honeypot.</li>
+          <li><strong style="color:var(--teal)">Year 3 (current):</strong> Cryptography &amp; Privacy, Practical Reverse Engineering &amp; Malware Analysis, Cyber Threat Intelligence, Linux Server Security, Network Infrastructure Security, Datacenter Virtualization, Security Project, Bachelor Thesis.</li>
+          <li>Security audit for Brandweer Vlaamse Ardennen — OSINT, NIS2/GDPR compliance gaps, WordPress vulnerability analysis.</li>
+          <li>International project at University of Economics, Katowice, Poland.</li>
         </ul>
         <div class="timeline-tags">
-          <span class="tl-tag">Cybercrime Law</span>
+          <span class="tl-tag">Pentesting</span>
           <span class="tl-tag">Forensics</span>
+          <span class="tl-tag">Malware Analysis</span>
+          <span class="tl-tag">Cryptography</span>
+          <span class="tl-tag">Threat Intelligence</span>
           <span class="tl-tag">Risk Assessment</span>
-          <span class="tl-tag">Secure Programming</span>
+          <span class="tl-tag">Linux Security</span>
+          <span class="tl-tag">Cybercrime Law</span>
         </div>
       </div>
 
@@ -1031,9 +1048,9 @@
         Graduating with a BSc in Cybersecurity in 2026 and actively looking for roles in <strong>SOC analysis, penetration testing, or application security</strong>. CEH certified, with real-world SIEM and secure development experience. Open to positions across Europe.
       </p>
       <div class="contact-links reveal">
-        <a href="mailto:victor.rogoz2@gmail.com" class="contact-link">
+        <a href="/cdn-cgi/l/email-protection#780e111b0c170a560a171f17024a381f15191114561b1715" class="contact-link">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          victor.rogoz2@gmail.com
+          <span class="__cf_email__" data-cfemail="b9cfd0dacdd6cb97cbd6ded6c38bf9ded4d8d0d597dad6d4">[email&#160;protected]</span>
         </a>
         <a href="https://www.linkedin.com/in/victor-rogoz/" target="_blank" rel="noopener" class="contact-link">
           <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
@@ -1054,38 +1071,10 @@
 </footer>
 
 
-<script>
-  // Reveal on scroll — robust with fallback
-  const revealEls = document.querySelectorAll('.reveal');
-
-  const showAll = () => revealEls.forEach(el => el.classList.add('visible'));
-
-  if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
-
-    revealEls.forEach(el => observer.observe(el));
-
-    // Safety fallback: if nothing has revealed after 1.5s, show everything
-    setTimeout(() => {
-      revealEls.forEach(el => {
-        if (!el.classList.contains('visible')) el.classList.add('visible');
-      });
-    }, 1500);
-  } else {
-    showAll();
-  }
-
-  // Active nav highlight on scroll
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // Nav highlight on scroll
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a');
-
   window.addEventListener('scroll', () => {
     let current = '';
     sections.forEach(sec => {
