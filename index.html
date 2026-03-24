@@ -1053,28 +1053,48 @@
   <p>Designed & built by <span>Victor Rogoz</span> · 2026 · Brugge, Belgium</p>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  // Intersection Observer for reveal animations
+
+<script>
+  // Reveal on scroll — robust with fallback
   const revealEls = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        // Stagger siblings slightly
-        const siblings = [...entry.target.parentElement.querySelectorAll('.reveal')];
-        const idx = siblings.indexOf(entry.target);
-        entry.target.style.transitionDelay = `${idx * 0.07}s`;
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
 
-  revealEls.forEach(el => observer.observe(el));
+  const showAll = () => revealEls.forEach(el => el.classList.add('visible'));
 
-  // Active nav link on scroll
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    // Safety fallback: if nothing has revealed after 1.5s, show everything
+    setTimeout(() => {
+      revealEls.forEach(el => {
+        if (!el.classList.contains('visible')) el.classList.add('visible');
+      });
+    }, 1500);
+  } else {
+    showAll();
+  }
+
+  // Active nav highlight on scroll
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('.nav-links a');
 
   window.addEventListener('scroll', () => {
     let current = '';
     sections.forEach(sec => {
+      if (window.scrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.style.color = link.getAttribute('href') === '#' + current ? 'var(--teal)' : '';
+    });
+  }, { passive: true });
+</script>
+</body>
+</html>
