@@ -1,1224 +1,2258 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Victor Rogoz — Cybersecurity Portfolio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:        #07090f;
-      --bg2:       #0d1120;
-      --bg3:       #111827;
-      --teal:      #00e5b0;
-      --teal-dim:  #00b88a;
-      --teal-glow: rgba(0,229,176,0.12);
-      --red:       #ff4d6d;
-      --text:      #e2e8f0;
-      --muted:     #64748b;
-      --border:    rgba(0,229,176,0.15);
-      --mono:      'Space Mono', monospace;
-      --sans:      'Syne', sans-serif;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--sans);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--teal-dim); border-radius: 2px; }
-
-    /* ── NOISE OVERLAY ── */
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.4;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.1rem 4rem;
-      background: rgba(7,9,15,0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-logo {
-      font-family: var(--mono);
-      font-size: 0.85rem;
-      color: var(--teal);
-      letter-spacing: 0.05em;
-    }
-
-    .nav-links {
-      display: flex; gap: 2.5rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      color: var(--muted);
-      text-decoration: none;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-      position: relative;
-    }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute; bottom: -3px; left: 0;
-      width: 0; height: 1px;
-      background: var(--teal);
-      transition: width 0.25s;
-    }
-
-    .nav-links a:hover { color: var(--teal); }
-    .nav-links a:hover::after { width: 100%; }
-
-    /* ── SECTIONS ── */
-    section { position: relative; z-index: 1; }
-
-    .container {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    /* ── HERO ── */
-    #hero {
-      min-height: 100vh;
-      display: flex; align-items: center;
-      padding: 6rem 0 4rem;
-      overflow: hidden;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4rem;
-      align-items: center;
-    }
-
-    .hero-tag {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--teal);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 1.2rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.2s;
-    }
-
-    .hero-name {
-      font-size: clamp(3rem, 6vw, 5.5rem);
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.4rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.35s;
-    }
-
-    .hero-name span { color: var(--teal); }
-
-    .hero-role {
-      font-family: var(--mono);
-      font-size: 1rem;
-      color: var(--muted);
-      margin-bottom: 1.8rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.5s;
-    }
-
-    .hero-desc {
-      font-size: 1rem;
-      color: #94a3b8;
-      line-height: 1.7;
-      max-width: 480px;
-      margin-bottom: 2.5rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.65s;
-    }
-
-    .hero-cta {
-      display: flex; gap: 1rem; flex-wrap: wrap;
-      opacity: 0;
-      animation: fadeUp 0.6s ease forwards 0.8s;
-    }
-
-    .btn {
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.85rem 2rem;
-      border-radius: 3px;
-      text-decoration: none;
-      transition: all 0.2s;
-      cursor: pointer;
-    }
-
-    .btn-primary {
-      background: var(--teal);
-      color: var(--bg);
-      font-weight: 700;
-    }
-
-    .btn-primary:hover {
-      background: #fff;
-      box-shadow: 0 0 24px var(--teal-glow);
-    }
-
-    .btn-ghost {
-      border: 1px solid var(--border);
-      color: var(--teal);
-      background: transparent;
-    }
-
-    .btn-ghost:hover {
-      border-color: var(--teal);
-      background: var(--teal-glow);
-    }
-
-    /* TERMINAL BLOCK */
-    .hero-terminal {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 0 60px rgba(0,229,176,0.07);
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards 0.5s;
-    }
-
-    .terminal-header {
-      background: var(--bg3);
-      padding: 0.7rem 1rem;
-      display: flex; align-items: center; gap: 0.5rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .dot-red { background: #ff5f57; }
-    .dot-yellow { background: #ffbd2e; }
-    .dot-green { background: #28c840; }
-
-    .terminal-title {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-left: 0.5rem;
-    }
-
-    .terminal-body {
-      padding: 1.5rem;
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      line-height: 2;
-    }
-
-    .t-line { display: block; }
-    .t-prompt { color: var(--teal); }
-    .t-cmd { color: var(--text); }
-    .t-out { color: #64748b; }
-    .t-val { color: #fbbf24; }
-    .t-str { color: #a78bfa; }
-    .t-num { color: var(--teal); }
-
-    .cursor {
-      display: inline-block;
-      width: 8px; height: 14px;
-      background: var(--teal);
-      vertical-align: middle;
-      margin-left: 2px;
-      animation: blink 1s step-end infinite;
-    }
-
-    /* ── SECTION SHARED ── */
-    .section-head {
-      display: flex; align-items: center; gap: 1rem;
-      margin-bottom: 3.5rem;
-    }
-
-    .section-num {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      color: var(--teal);
-      letter-spacing: 0.15em;
-    }
-
-    .section-title {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.01em;
-    }
-
-    .section-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* ── ABOUT ── */
-    #about { padding: 7rem 0; }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5rem;
-      align-items: start;
-    }
-
-    .about-text p {
-      color: #94a3b8;
-      font-size: 0.97rem;
-      line-height: 1.85;
-      margin-bottom: 1.2rem;
-    }
-
-    .about-text strong { color: var(--teal); font-weight: 700; }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .stat-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1.4rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .stat-card:hover {
-      border-color: var(--teal);
-      box-shadow: 0 0 20px var(--teal-glow);
-    }
-
-    .stat-num {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--teal);
-      line-height: 1;
-      margin-bottom: 0.3rem;
-    }
-
-    .stat-label {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    /* ── SKILLS ── */
-    #skills { padding: 7rem 0; background: linear-gradient(180deg, transparent, var(--bg2) 30%, var(--bg2) 70%, transparent); }
-
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
-
-    .skill-group {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.5rem;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-
-    .skill-group:hover {
-      border-color: var(--teal-dim);
-      transform: translateY(-3px);
-    }
-
-    .skill-group-title {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--teal);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 1.2rem;
-      padding-bottom: 0.7rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .skill-tags {
-      display: flex; flex-wrap: wrap; gap: 0.5rem;
-    }
-
-    .skill-tag {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      padding: 0.3rem 0.7rem;
-      border-radius: 3px;
-      background: rgba(0,229,176,0.06);
-      border: 1px solid rgba(0,229,176,0.15);
-      color: #94a3b8;
-      letter-spacing: 0.03em;
-      transition: background 0.2s, color 0.2s;
-    }
-
-    .skill-tag:hover {
-      background: rgba(0,229,176,0.15);
-      color: var(--teal);
-    }
-
-    /* ── EXPERIENCE / TIMELINE ── */
-    #experience { padding: 7rem 0; }
-
-    .timeline {
-      position: relative;
-      padding-left: 2rem;
-    }
-
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 1px;
-      background: linear-gradient(180deg, var(--teal), var(--border), transparent);
-    }
-
-    .timeline-item {
-      position: relative;
-      margin-bottom: 3rem;
-      padding-left: 2rem;
-    }
-
-    .timeline-dot {
-      position: absolute;
-      left: -2.4rem; top: 0.25rem;
-      width: 12px; height: 12px;
-      border-radius: 50%;
-      background: var(--teal);
-      box-shadow: 0 0 12px rgba(0,229,176,0.5);
-      border: 2px solid var(--bg);
-    }
-
-    .timeline-date {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--teal);
-      letter-spacing: 0.1em;
-      margin-bottom: 0.4rem;
-    }
-
-    .timeline-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 0.2rem;
-    }
-
-    .timeline-org {
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 0.8rem;
-    }
-
-    .timeline-desc {
-      color: #94a3b8;
-      font-size: 0.92rem;
-      line-height: 1.75;
-    }
-
-    .timeline-desc li {
-      margin-bottom: 0.3rem;
-      padding-left: 1rem;
-      position: relative;
-    }
-
-    .timeline-desc li::before {
-      content: '▸';
-      position: absolute; left: 0;
-      color: var(--teal);
-      font-size: 0.7rem;
-    }
-
-    .timeline-tags {
-      display: flex; gap: 0.4rem; flex-wrap: wrap;
-      margin-top: 0.8rem;
-    }
-
-    .tl-tag {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 2px;
-      background: rgba(0,229,176,0.08);
-      color: var(--teal-dim);
-      border: 1px solid rgba(0,229,176,0.1);
-    }
-
-    /* ── PROJECTS ── */
-    #projects { padding: 7rem 0; }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-    }
-
-    .project-card {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.2s, transform 0.25s, box-shadow 0.25s;
-      cursor: default;
-    }
-
-    .project-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--teal), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .project-card:hover {
-      border-color: var(--teal-dim);
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 30px var(--teal-glow);
-    }
-
-    .project-card:hover::before { opacity: 1; }
-
-    .project-num {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--teal);
-      letter-spacing: 0.15em;
-      margin-bottom: 0.8rem;
-    }
-
-    .project-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 0.8rem;
-    }
-
-    .project-desc {
-      color: #94a3b8;
-      font-size: 0.87rem;
-      line-height: 1.7;
-      margin-bottom: 1.2rem;
-    }
-
-    .project-tech {
-      display: flex; flex-wrap: wrap; gap: 0.4rem;
-    }
-
-    .p-tag {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 2px;
-      background: transparent;
-      border: 1px solid rgba(0,229,176,0.2);
-      color: var(--teal);
-    }
-
-    /* ── CERTIFICATIONS ── */
-    #certifications { padding: 7rem 0; background: linear-gradient(180deg, transparent, var(--bg2) 30%, var(--bg2) 70%, transparent); }
-
-    .cert-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-    }
-
-    .cert-card {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.8rem 2rem;
-      display: flex; gap: 1.2rem; align-items: flex-start;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .cert-card:hover {
-      border-color: var(--teal);
-      box-shadow: 0 0 24px var(--teal-glow);
-    }
-
-    .cert-icon {
-      width: 44px; height: 44px; flex-shrink: 0;
-      background: var(--teal-glow);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
-    }
-
-    .cert-name {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 0.3rem;
-    }
-
-    .cert-meta {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
-    /* ── CONTACT ── */
-    #contact { padding: 7rem 0 6rem; }
-
-    .contact-inner {
-      max-width: 700px; margin: 0 auto; text-align: center;
-    }
-
-    .contact-inner .section-head { justify-content: center; }
-
-    .contact-lead {
-      font-size: 1.1rem;
-      color: #94a3b8;
-      line-height: 1.75;
-      margin-bottom: 2.5rem;
-    }
-
-    .contact-links {
-      display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;
-    }
-
-    .contact-link {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--muted);
-      text-decoration: none;
-      padding: 0.75rem 1.4rem;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      transition: all 0.2s;
-      letter-spacing: 0.05em;
-    }
-
-    .contact-link:hover {
-      color: var(--teal);
-      border-color: var(--teal);
-      background: var(--teal-glow);
-    }
-
-    .contact-link svg { width: 14px; height: 14px; }
-
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem;
-      text-align: center;
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
-    footer span { color: var(--teal); }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
-    }
-
-    @keyframes revealUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: none; }
-    }
-
-    .reveal {
-      opacity: 0;
-      animation: revealUp 0.6s ease forwards;
-    }
-
-    /* stagger siblings */
-    .reveal:nth-child(1) { animation-delay: 0.05s; }
-    .reveal:nth-child(2) { animation-delay: 0.15s; }
-    .reveal:nth-child(3) { animation-delay: 0.25s; }
-    .reveal:nth-child(4) { animation-delay: 0.35s; }
-    .reveal:nth-child(5) { animation-delay: 0.45s; }
-    .reveal:nth-child(6) { animation-delay: 0.55s; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1.5rem; }
-      .hero-grid, .about-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .skills-grid { grid-template-columns: repeat(2, 1fr); }
-      .projects-grid, .cert-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 600px) {
-      nav { padding: 1rem; }
-      .nav-links { display: none; }
-      .skills-grid { grid-template-columns: 1fr; }
-      .stat-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    /* ── CERT MODAL ── */
-    .cert-card { cursor: pointer; }
-    .cert-card .cert-view-hint {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      color: var(--teal-dim);
-      margin-top: 0.5rem;
-      letter-spacing: 0.08em;
-    }
-
-    #cert-modal {
-      display: none;
-      position: fixed; inset: 0;
-      z-index: 500;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(8px);
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-    }
-    #cert-modal.open { display: flex; }
-
-    .modal-box {
-      background: var(--bg2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      width: 100%;
-      max-width: 860px;
-      max-height: 92vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 0 60px rgba(0,229,176,0.1);
-    }
-
-    .modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1rem 1.4rem;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
-    }
-
-    .modal-title {
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--teal);
-      letter-spacing: 0.1em;
-    }
-
-    .modal-close {
-      background: none; border: none; cursor: pointer;
-      color: var(--muted); font-size: 1.4rem; line-height: 1;
-      padding: 0 0.2rem;
-      transition: color 0.2s;
-    }
-    .modal-close:hover { color: var(--teal); }
-
-    .modal-body {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .modal-body iframe {
-      width: 100%; height: 100%;
-      min-height: 75vh;
-      border: none;
-      display: block;
-    }
-
-  </style>
-</head>
-<body>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">VR://portfolio</div>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#certifications">Certs</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="container">
-    <div class="hero-grid">
-      <div class="hero-left">
-        <div class="hero-tag">// BSc Cybersecurity · CEH · SIEM · Pentest</div>
-        <h1 class="hero-name">Victor<br/><span>Rogoz</span></h1>
-        <p class="hero-role">[ Bachelor Cybersecurity — Howest University, 2026 ]</p>
-        <p class="hero-desc">
-          Graduating cybersecurity specialist (BSc Applied CS — Cyber Security, Howest) with a <strong>CEH</strong> and hands-on SOC experience.
-          Focused on threat detection, penetration testing, and security monitoring — with a developer background
-          that lets me understand and attack systems from the inside out. Currently completing my internship
-          at <strong>Moldova's Ministry of Internal Affairs</strong>, operationalising their Cyber Security Center with FortiSIEM.
-        </p>
-        <div class="hero-cta">
-          <a href="#projects" class="btn btn-primary">View Projects</a>
-          <a href="#contact" class="btn btn-ghost">Get In Touch</a>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Victor Rogoz — Cybersecurity Portfolio</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            :root {
+                --bg: #07090f;
+                --bg2: #0d1120;
+                --bg3: #111827;
+                --teal: #00e5b0;
+                --teal-dim: #00b88a;
+                --teal-glow: rgba(0, 229, 176, 0.12);
+                --red: #ff4d6d;
+                --text: #e2e8f0;
+                --muted: #64748b;
+                --border: rgba(0, 229, 176, 0.15);
+                --mono: "Space Mono", monospace;
+                --sans: "Syne", sans-serif;
+            }
+
+            html {
+                scroll-behavior: smooth;
+            }
+
+            body {
+                background: var(--bg);
+                color: var(--text);
+                font-family: var(--sans);
+                line-height: 1.6;
+                overflow-x: hidden;
+            }
+
+            /* ── SCROLLBAR ── */
+            ::-webkit-scrollbar {
+                width: 4px;
+            }
+            ::-webkit-scrollbar-track {
+                background: var(--bg);
+            }
+            ::-webkit-scrollbar-thumb {
+                background: var(--teal-dim);
+                border-radius: 2px;
+            }
+
+            /* ── NOISE OVERLAY ── */
+            body::before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+                pointer-events: none;
+                z-index: 0;
+                opacity: 0.4;
+            }
+
+            /* ── NAV ── */
+            nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1.1rem 4rem;
+                background: rgba(7, 9, 15, 0.85);
+                backdrop-filter: blur(16px);
+                border-bottom: 1px solid var(--border);
+            }
+
+            .nav-logo {
+                font-family: var(--mono);
+                font-size: 0.85rem;
+                color: var(--teal);
+                letter-spacing: 0.05em;
+            }
+
+            .nav-links {
+                display: flex;
+                gap: 2.5rem;
+                list-style: none;
+            }
+
+            .nav-links a {
+                font-family: var(--mono);
+                font-size: 0.75rem;
+                color: var(--muted);
+                text-decoration: none;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                transition: color 0.2s;
+                position: relative;
+            }
+
+            .nav-links a::after {
+                content: "";
+                position: absolute;
+                bottom: -3px;
+                left: 0;
+                width: 0;
+                height: 1px;
+                background: var(--teal);
+                transition: width 0.25s;
+            }
+
+            .nav-links a:hover {
+                color: var(--teal);
+            }
+            .nav-links a:hover::after {
+                width: 100%;
+            }
+
+            /* ── SECTIONS ── */
+            section {
+                position: relative;
+                z-index: 1;
+            }
+
+            .container {
+                max-width: 1100px;
+                margin: 0 auto;
+                padding: 0 2rem;
+            }
+
+            /* ── HERO ── */
+            #hero {
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                padding: 6rem 0 4rem;
+                overflow: hidden;
+            }
+
+            .hero-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 4rem;
+                align-items: center;
+            }
+
+            .hero-tag {
+                font-family: var(--mono);
+                font-size: 0.72rem;
+                color: var(--teal);
+                letter-spacing: 0.2em;
+                text-transform: uppercase;
+                margin-bottom: 1.2rem;
+                opacity: 0;
+                animation: fadeUp 0.6s ease forwards 0.2s;
+            }
+
+            .hero-name {
+                font-size: clamp(3rem, 6vw, 5.5rem);
+                font-weight: 800;
+                line-height: 1;
+                letter-spacing: -0.02em;
+                margin-bottom: 0.4rem;
+                opacity: 0;
+                animation: fadeUp 0.6s ease forwards 0.35s;
+            }
+
+            .hero-name span {
+                color: var(--teal);
+            }
+
+            .hero-role {
+                font-family: var(--mono);
+                font-size: 1rem;
+                color: var(--muted);
+                margin-bottom: 1.8rem;
+                opacity: 0;
+                animation: fadeUp 0.6s ease forwards 0.5s;
+            }
+
+            .hero-desc {
+                font-size: 1rem;
+                color: #94a3b8;
+                line-height: 1.7;
+                max-width: 480px;
+                margin-bottom: 2.5rem;
+                opacity: 0;
+                animation: fadeUp 0.6s ease forwards 0.65s;
+            }
+
+            .hero-cta {
+                display: flex;
+                gap: 1rem;
+                flex-wrap: wrap;
+                opacity: 0;
+                animation: fadeUp 0.6s ease forwards 0.8s;
+            }
+
+            .btn {
+                font-family: var(--mono);
+                font-size: 0.78rem;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                padding: 0.85rem 2rem;
+                border-radius: 3px;
+                text-decoration: none;
+                transition: all 0.2s;
+                cursor: pointer;
+            }
+
+            .btn-primary {
+                background: var(--teal);
+                color: var(--bg);
+                font-weight: 700;
+            }
+
+            .btn-primary:hover {
+                background: #fff;
+                box-shadow: 0 0 24px var(--teal-glow);
+            }
+
+            .btn-ghost {
+                border: 1px solid var(--border);
+                color: var(--teal);
+                background: transparent;
+            }
+
+            .btn-ghost:hover {
+                border-color: var(--teal);
+                background: var(--teal-glow);
+            }
+
+            /* TERMINAL BLOCK */
+            .hero-terminal {
+                background: var(--bg2);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 0 60px rgba(0, 229, 176, 0.07);
+                opacity: 0;
+                animation: fadeUp 0.7s ease forwards 0.5s;
+            }
+
+            .terminal-header {
+                background: var(--bg3);
+                padding: 0.7rem 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .dot {
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+            }
+            .dot-red {
+                background: #ff5f57;
+            }
+            .dot-yellow {
+                background: #ffbd2e;
+            }
+            .dot-green {
+                background: #28c840;
+            }
+
+            .terminal-title {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                color: var(--muted);
+                margin-left: 0.5rem;
+            }
+
+            .terminal-body {
+                padding: 1.5rem;
+                font-family: var(--mono);
+                font-size: 0.8rem;
+                line-height: 2;
+            }
+
+            .t-line {
+                display: block;
+            }
+            .t-prompt {
+                color: var(--teal);
+            }
+            .t-cmd {
+                color: var(--text);
+            }
+            .t-out {
+                color: #64748b;
+            }
+            .t-val {
+                color: #fbbf24;
+            }
+            .t-str {
+                color: #a78bfa;
+            }
+            .t-num {
+                color: var(--teal);
+            }
+
+            .cursor {
+                display: inline-block;
+                width: 8px;
+                height: 14px;
+                background: var(--teal);
+                vertical-align: middle;
+                margin-left: 2px;
+                animation: blink 1s step-end infinite;
+            }
+
+            /* ── SECTION SHARED ── */
+            .section-head {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin-bottom: 3.5rem;
+            }
+
+            .section-num {
+                font-family: var(--mono);
+                font-size: 0.72rem;
+                color: var(--teal);
+                letter-spacing: 0.15em;
+            }
+
+            .section-title {
+                font-size: 2rem;
+                font-weight: 800;
+                letter-spacing: -0.01em;
+            }
+
+            .section-line {
+                flex: 1;
+                height: 1px;
+                background: var(--border);
+            }
+
+            /* ── ABOUT ── */
+            #about {
+                padding: 7rem 0;
+            }
+
+            .about-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 5rem;
+                align-items: start;
+            }
+
+            .about-text p {
+                color: #94a3b8;
+                font-size: 0.97rem;
+                line-height: 1.85;
+                margin-bottom: 1.2rem;
+            }
+
+            .about-text strong {
+                color: var(--teal);
+                font-weight: 700;
+            }
+
+            .stat-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+
+            .stat-card {
+                background: var(--bg2);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                padding: 1.4rem;
+                transition:
+                    border-color 0.2s,
+                    box-shadow 0.2s;
+            }
+
+            .stat-card:hover {
+                border-color: var(--teal);
+                box-shadow: 0 0 20px var(--teal-glow);
+            }
+
+            .stat-num {
+                font-size: 2rem;
+                font-weight: 800;
+                color: var(--teal);
+                line-height: 1;
+                margin-bottom: 0.3rem;
+            }
+
+            .stat-label {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                color: var(--muted);
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+            }
+
+            /* ── SKILLS ── */
+            #skills {
+                padding: 7rem 0;
+                background: linear-gradient(
+                    180deg,
+                    transparent,
+                    var(--bg2) 30%,
+                    var(--bg2) 70%,
+                    transparent
+                );
+            }
+
+            .skills-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 1.5rem;
+            }
+
+            .skill-group {
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 1.5rem;
+                transition:
+                    border-color 0.2s,
+                    transform 0.2s;
+            }
+
+            .skill-group:hover {
+                border-color: var(--teal-dim);
+                transform: translateY(-3px);
+            }
+
+            .skill-group-title {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                color: var(--teal);
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                margin-bottom: 1.2rem;
+                padding-bottom: 0.7rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            .skill-tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .skill-tag {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                padding: 0.3rem 0.7rem;
+                border-radius: 3px;
+                background: rgba(0, 229, 176, 0.06);
+                border: 1px solid rgba(0, 229, 176, 0.15);
+                color: #94a3b8;
+                letter-spacing: 0.03em;
+                transition:
+                    background 0.2s,
+                    color 0.2s;
+            }
+
+            .skill-tag:hover {
+                background: rgba(0, 229, 176, 0.15);
+                color: var(--teal);
+            }
+
+            /* ── EXPERIENCE / TIMELINE ── */
+            #experience {
+                padding: 7rem 0;
+            }
+
+            .timeline {
+                position: relative;
+                padding-left: 2rem;
+            }
+
+            .timeline::before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 1px;
+                background: linear-gradient(
+                    180deg,
+                    var(--teal),
+                    var(--border),
+                    transparent
+                );
+            }
+
+            .timeline-item {
+                position: relative;
+                margin-bottom: 3rem;
+                padding-left: 2rem;
+            }
+
+            .timeline-dot {
+                position: absolute;
+                left: -2.4rem;
+                top: 0.25rem;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: var(--teal);
+                box-shadow: 0 0 12px rgba(0, 229, 176, 0.5);
+                border: 2px solid var(--bg);
+            }
+
+            .timeline-date {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                color: var(--teal);
+                letter-spacing: 0.1em;
+                margin-bottom: 0.4rem;
+            }
+
+            .timeline-title {
+                font-size: 1.15rem;
+                font-weight: 700;
+                margin-bottom: 0.2rem;
+            }
+
+            .timeline-org {
+                font-family: var(--mono);
+                font-size: 0.8rem;
+                color: var(--muted);
+                margin-bottom: 0.8rem;
+            }
+
+            .timeline-desc {
+                color: #94a3b8;
+                font-size: 0.92rem;
+                line-height: 1.75;
+            }
+
+            .timeline-desc li {
+                margin-bottom: 0.3rem;
+                padding-left: 1rem;
+                position: relative;
+            }
+
+            .timeline-desc li::before {
+                content: "▸";
+                position: absolute;
+                left: 0;
+                color: var(--teal);
+                font-size: 0.7rem;
+            }
+
+            .timeline-tags {
+                display: flex;
+                gap: 0.4rem;
+                flex-wrap: wrap;
+                margin-top: 0.8rem;
+            }
+
+            .tl-tag {
+                font-family: var(--mono);
+                font-size: 0.65rem;
+                padding: 0.2rem 0.6rem;
+                border-radius: 2px;
+                background: rgba(0, 229, 176, 0.08);
+                color: var(--teal-dim);
+                border: 1px solid rgba(0, 229, 176, 0.1);
+            }
+
+            /* ── PROJECTS ── */
+            #projects {
+                padding: 7rem 0;
+            }
+
+            .projects-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .project-card {
+                background: var(--bg2);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 2rem;
+                position: relative;
+                overflow: hidden;
+                transition:
+                    border-color 0.2s,
+                    transform 0.25s,
+                    box-shadow 0.25s;
+                cursor: default;
+            }
+
+            .project-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    var(--teal),
+                    transparent
+                );
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .project-card:hover {
+                border-color: var(--teal-dim);
+                transform: translateY(-4px);
+                box-shadow:
+                    0 12px 40px rgba(0, 0, 0, 0.4),
+                    0 0 30px var(--teal-glow);
+            }
+
+            .project-card:hover::before {
+                opacity: 1;
+            }
+
+            .project-num {
+                font-family: var(--mono);
+                font-size: 0.65rem;
+                color: var(--teal);
+                letter-spacing: 0.15em;
+                margin-bottom: 0.8rem;
+            }
+
+            .project-title {
+                font-size: 1.1rem;
+                font-weight: 700;
+                margin-bottom: 0.8rem;
+            }
+
+            .project-desc {
+                color: #94a3b8;
+                font-size: 0.87rem;
+                line-height: 1.7;
+                margin-bottom: 1.2rem;
+            }
+
+            .project-tech {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.4rem;
+            }
+
+            .p-tag {
+                font-family: var(--mono);
+                font-size: 0.65rem;
+                padding: 0.25rem 0.6rem;
+                border-radius: 2px;
+                background: transparent;
+                border: 1px solid rgba(0, 229, 176, 0.2);
+                color: var(--teal);
+            }
+
+            /* ── EVENTS ── */
+            #events {
+                padding: 7rem 0;
+                background: linear-gradient(
+                    180deg,
+                    transparent,
+                    var(--bg2) 30%,
+                    var(--bg2) 70%,
+                    transparent
+                );
+            }
+
+            .events-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .event-card {
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                overflow: hidden;
+                transition:
+                    border-color 0.2s,
+                    box-shadow 0.2s;
+            }
+
+            .event-card:hover {
+                border-color: var(--teal-dim);
+                box-shadow: 0 0 30px var(--teal-glow);
+            }
+
+            .event-gallery {
+                position: relative;
+                width: 100%;
+                height: 320px;
+                overflow: hidden;
+                background: var(--bg2);
+            }
+
+            .event-gallery img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                opacity: 0;
+                transition: opacity 0.5s ease;
+            }
+
+            .event-gallery img.active {
+                opacity: 1;
+            }
+
+            .gallery-nav {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(7, 9, 15, 0.7);
+                border: 1px solid var(--border);
+                color: var(--teal);
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1rem;
+                z-index: 2;
+                transition: background 0.2s;
+                backdrop-filter: blur(4px);
+            }
+
+            .gallery-nav:hover {
+                background: rgba(0, 229, 176, 0.2);
+            }
+            .gallery-prev {
+                left: 0.8rem;
+            }
+            .gallery-next {
+                right: 0.8rem;
+            }
+
+            .gallery-dots {
+                position: absolute;
+                bottom: 0.8rem;
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                gap: 0.4rem;
+                z-index: 2;
+            }
+
+            .gallery-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: var(--muted);
+                transition:
+                    background 0.2s,
+                    transform 0.2s;
+                cursor: pointer;
+            }
+
+            .gallery-dot.active {
+                background: var(--teal);
+                transform: scale(1.4);
+            }
+
+            .event-body {
+                padding: 1.8rem 2rem;
+            }
+
+            .event-date {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                color: var(--teal);
+                letter-spacing: 0.1em;
+                margin-bottom: 0.5rem;
+            }
+
+            .event-title {
+                font-size: 1.15rem;
+                font-weight: 700;
+                margin-bottom: 0.8rem;
+            }
+
+            .event-desc {
+                color: #94a3b8;
+                font-size: 0.9rem;
+                line-height: 1.75;
+                margin-bottom: 1rem;
+            }
+
+            .event-link {
+                font-family: var(--mono);
+                font-size: 0.72rem;
+                color: var(--teal-dim);
+                text-decoration: none;
+                letter-spacing: 0.05em;
+                transition: color 0.2s;
+            }
+
+            .event-link:hover {
+                color: var(--teal);
+            }
+
+            @media (max-width: 600px) {
+                .event-gallery {
+                    height: 220px;
+                }
+            }
+
+            /* ── CERTIFICATIONS ── */
+            #certifications {
+                padding: 7rem 0;
+            }
+
+            .cert-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .cert-card {
+                background: var(--bg);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 1.8rem 2rem;
+                display: flex;
+                gap: 1.2rem;
+                align-items: flex-start;
+                transition:
+                    border-color 0.2s,
+                    box-shadow 0.2s;
+            }
+
+            .cert-card:hover {
+                border-color: var(--teal);
+                box-shadow: 0 0 24px var(--teal-glow);
+            }
+
+            .cert-icon {
+                width: 44px;
+                height: 44px;
+                flex-shrink: 0;
+                background: var(--teal-glow);
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+            }
+
+            .cert-name {
+                font-size: 1rem;
+                font-weight: 700;
+                margin-bottom: 0.3rem;
+            }
+
+            .cert-meta {
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                color: var(--muted);
+            }
+
+            /* ── CONTACT ── */
+            #contact {
+                padding: 7rem 0 6rem;
+            }
+
+            .contact-inner {
+                max-width: 700px;
+                margin: 0 auto;
+                text-align: center;
+            }
+
+            .contact-inner .section-head {
+                justify-content: center;
+            }
+
+            .contact-lead {
+                font-size: 1.1rem;
+                color: #94a3b8;
+                line-height: 1.75;
+                margin-bottom: 2.5rem;
+            }
+
+            .contact-links {
+                display: flex;
+                justify-content: center;
+                gap: 1rem;
+                flex-wrap: wrap;
+            }
+
+            .contact-link {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-family: var(--mono);
+                font-size: 0.78rem;
+                color: var(--muted);
+                text-decoration: none;
+                padding: 0.75rem 1.4rem;
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                transition: all 0.2s;
+                letter-spacing: 0.05em;
+            }
+
+            .contact-link:hover {
+                color: var(--teal);
+                border-color: var(--teal);
+                background: var(--teal-glow);
+            }
+
+            .contact-link svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            /* ── FOOTER ── */
+            footer {
+                border-top: 1px solid var(--border);
+                padding: 2rem;
+                text-align: center;
+                font-family: var(--mono);
+                font-size: 0.7rem;
+                color: var(--muted);
+            }
+
+            footer span {
+                color: var(--teal);
+            }
+
+            /* ── ANIMATIONS ── */
+            @keyframes fadeUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes blink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0;
+                }
+            }
+
+            @keyframes revealUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(24px);
+                }
+                to {
+                    opacity: 1;
+                    transform: none;
+                }
+            }
+
+            .reveal {
+                opacity: 0;
+                animation: revealUp 0.6s ease forwards;
+            }
+
+            /* stagger siblings */
+            .reveal:nth-child(1) {
+                animation-delay: 0.05s;
+            }
+            .reveal:nth-child(2) {
+                animation-delay: 0.15s;
+            }
+            .reveal:nth-child(3) {
+                animation-delay: 0.25s;
+            }
+            .reveal:nth-child(4) {
+                animation-delay: 0.35s;
+            }
+            .reveal:nth-child(5) {
+                animation-delay: 0.45s;
+            }
+            .reveal:nth-child(6) {
+                animation-delay: 0.55s;
+            }
+
+            /* ── RESPONSIVE ── */
+            @media (max-width: 900px) {
+                nav {
+                    padding: 1rem 1.5rem;
+                }
+                .nav-links {
+                    gap: 1.5rem;
+                }
+                .hero-grid,
+                .about-grid {
+                    grid-template-columns: 1fr;
+                    gap: 3rem;
+                }
+                .skills-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+                .projects-grid,
+                .cert-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @media (max-width: 600px) {
+                nav {
+                    padding: 1rem;
+                }
+                .nav-links {
+                    display: none;
+                }
+                .skills-grid {
+                    grid-template-columns: 1fr;
+                }
+                .stat-grid {
+                    grid-template-columns: 1fr 1fr;
+                }
+            }
+
+            /* ── CERT MODAL ── */
+            .cert-card {
+                cursor: pointer;
+            }
+            .cert-card .cert-view-hint {
+                font-family: var(--mono);
+                font-size: 0.62rem;
+                color: var(--teal-dim);
+                margin-top: 0.5rem;
+                letter-spacing: 0.08em;
+            }
+
+            #cert-modal {
+                display: none;
+                position: fixed;
+                inset: 0;
+                z-index: 500;
+                background: rgba(0, 0, 0, 0.85);
+                backdrop-filter: blur(8px);
+                align-items: center;
+                justify-content: center;
+                padding: 1.5rem;
+            }
+            #cert-modal.open {
+                display: flex;
+            }
+
+            .modal-box {
+                background: var(--bg2);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                width: 100%;
+                max-width: 860px;
+                max-height: 92vh;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                box-shadow: 0 0 60px rgba(0, 229, 176, 0.1);
+            }
+
+            .modal-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 1rem 1.4rem;
+                border-bottom: 1px solid var(--border);
+                flex-shrink: 0;
+            }
+
+            .modal-title {
+                font-family: var(--mono);
+                font-size: 0.78rem;
+                color: var(--teal);
+                letter-spacing: 0.1em;
+            }
+
+            .modal-close {
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: var(--muted);
+                font-size: 1.4rem;
+                line-height: 1;
+                padding: 0 0.2rem;
+                transition: color 0.2s;
+            }
+            .modal-close:hover {
+                color: var(--teal);
+            }
+
+            .modal-body {
+                flex: 1;
+                overflow: hidden;
+                position: relative;
+            }
+
+            .modal-body iframe {
+                width: 100%;
+                height: 100%;
+                min-height: 75vh;
+                border: none;
+                display: block;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- NAV -->
+        <nav>
+            <div class="nav-logo">VR://portfolio</div>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#events">Blog</a></li>
+                <li><a href="#certifications">Certs</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <!-- HERO -->
+        <section id="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-left">
+                        <div class="hero-tag">
+                            // BSc Cybersecurity · CEH · SIEM · Pentest
+                        </div>
+                        <h1 class="hero-name">
+                            Victor<br /><span>Rogoz</span>
+                        </h1>
+                        <p class="hero-role">
+                            [ Bachelor Cybersecurity — Howest University, 2026 ]
+                        </p>
+                        <p class="hero-desc">
+                            Graduating cybersecurity specialist (BSc Applied CS
+                            — Cyber Security, Howest) with a
+                            <strong>CEH</strong> and hands-on SOC experience.
+                            Focused on threat detection, penetration testing,
+                            and security monitoring — with a developer
+                            background that lets me understand and attack
+                            systems from the inside out. Currently completing my
+                            internship at
+                            <strong
+                                >Moldova's Ministry of Internal Affairs</strong
+                            >, operationalising their Cyber Security Center with
+                            FortiSIEM.
+                        </p>
+                        <div class="hero-cta">
+                            <a href="#projects" class="btn btn-primary"
+                                >View Projects</a
+                            >
+                            <a href="#contact" class="btn btn-ghost"
+                                >Get In Touch</a
+                            >
+                        </div>
+                    </div>
+
+                    <div class="hero-terminal">
+                        <div class="terminal-header">
+                            <div class="dot dot-red"></div>
+                            <div class="dot dot-yellow"></div>
+                            <div class="dot dot-green"></div>
+                            <span class="terminal-title"
+                                >victor@portfolio ~ zsh</span
+                            >
+                        </div>
+                        <div class="terminal-body">
+                            <span class="t-line"
+                                ><span class="t-prompt">❯ </span
+                                ><span class="t-cmd">whoami</span></span
+                            >
+                            <span class="t-line"
+                                ><span class="t-out">victor_rogoz</span></span
+                            >
+                            <span class="t-line">&nbsp;</span>
+                            <span class="t-line"
+                                ><span class="t-prompt">❯ </span
+                                ><span class="t-cmd"
+                                    >cat profile.json</span
+                                ></span
+                            >
+                            <span class="t-line"
+                                ><span class="t-out">{</span></span
+                            >
+                            <span class="t-line"
+                                ><span class="t-out"
+                                    >&nbsp;
+                                    <span class="t-val">"degree"</span
+                                    >:&nbsp;<span class="t-str"
+                                        >"BSc Cybersecurity, Howest"</span
+                                    >,</span
+                                ></span
+                            >
+                            <span class="t-line"
+                                ><span class="t-out"
+                                    >&nbsp;
+                                    <span class="t-val">"cert"</span
+                                    >:&nbsp;<span class="t-str">"CEH"</span
+                                    >,</span
+                                ></span
+                            >
+                            <span class="t-line"
+                                ><span class="t-out"
+                                    >&nbsp;
+                                    <span class="t-val">"focus"</span
+                                    >:&nbsp;<span class="t-str"
+                                        >"threat_detection · pentest ·
+                                        soc"</span
+                                    >,</span
+                                ></span
+                            >
+                            <span class="t-line"
+                                ><span class="t-out"
+                                    >&nbsp;
+                                    <span class="t-val">"siem"</span
+                                    >:&nbsp;<span class="t-str"
+                                        >"FortiSIEM"</span
+                                    >,</span
+                                ></span
+                            >
+                            <span class="t-line"
+                                ><span class="t-out"
+                                    >&nbsp;
+                                    <span class="t-val">"status"</span
+                                    >:&nbsp;<span class="t-str"
+                                        >"open_to_work"</span
+                                    ></span
+                                ></span
+                            >
+                            <span class="t-line"
+                                ><span class="t-out">}</span></span
+                            >
+                            <span class="t-line">&nbsp;</span>
+                            <span class="t-line"
+                                ><span class="t-prompt">❯ </span
+                                ><span class="t-cmd"
+                                    >nmap --open
+                                    <span class="t-num">interests</span></span
+                                ><span class="cursor"></span
+                            ></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="section-num">01.</span>
+                    <h2 class="section-title">About Me</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="about-grid">
+                    <div class="about-text reveal">
+                        <p>
+                            I'm finishing a
+                            <strong>Bachelor's in Cybersecurity</strong> at
+                            Howest University of Applied Sciences in Bruges,
+                            graduating in 2026 — with a
+                            <strong>CEH (Certified Ethical Hacker)</strong>
+                            already under my belt.
+                        </p>
+                        <p>
+                            My studies cover the full offensive and defensive
+                            spectrum:
+                            <strong
+                                >Web &amp; Network Pentesting, Malware Analysis,
+                                Reverse Engineering, Cyber Threat Intelligence,
+                                Forensics, Cryptography, Linux Server
+                                Security</strong
+                            >, and Cybercrime Legislation. I don't just study it
+                            — I apply it. My group security audit for a Belgian
+                            fire department uncovered OSINT exposure, NIS2/GDPR
+                            gaps, and active WordPress vulnerabilities.
+                        </p>
+                        <p>
+                            For my final-year internship I'm embedded at the
+                            <strong
+                                >Ministry of Internal Affairs of Moldova</strong
+                            >, helping stand up their Cyber Security Center. My
+                            focus is
+                            <strong>SIEM operations with FortiSIEM</strong> —
+                            writing detection rules, cutting false positives,
+                            and building the monitoring foundation for their
+                            SOC.
+                        </p>
+                        <p>
+                            What sets me apart: a
+                            <strong
+                                >developer background that makes me a better
+                                attacker</strong
+                            >. I understand how apps are built, which means I
+                            know exactly where they break. Romanian native, C1
+                            Russian, B2 English (Cambridge certified).
+                        </p>
+                    </div>
+                    <div class="stat-grid reveal">
+                        <div class="stat-card">
+                            <div class="stat-num">CEH</div>
+                            <div class="stat-label">
+                                Certified Ethical Hacker
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-num">SOC</div>
+                            <div class="stat-label">FortiSIEM Operator</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-num">MAI</div>
+                            <div class="stat-label">Current Internship</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-num">2026</div>
+                            <div class="stat-label">Graduation Year</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS -->
+        <section id="skills">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="section-num">02.</span>
+                    <h2 class="section-title">Skills & Tools</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="skills-grid">
+                    <div class="skill-group reveal">
+                        <div class="skill-group-title">// Security</div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Penetration Testing</span>
+                            <span class="skill-tag">Web Pentesting (Adv.)</span>
+                            <span class="skill-tag"
+                                >Network &amp; System Pentesting</span
+                            >
+                            <span class="skill-tag">Malware Analysis</span>
+                            <span class="skill-tag">Reverse Engineering</span>
+                            <span class="skill-tag"
+                                >Cyber Threat Intelligence</span
+                            >
+                            <span class="skill-tag">Digital Forensics</span>
+                            <span class="skill-tag">SIEM / FortiSIEM</span>
+                            <span class="skill-tag">Burp Suite</span>
+                            <span class="skill-tag">Wireshark</span>
+                            <span class="skill-tag">Cryptography</span>
+                            <span class="skill-tag"
+                                >Threat &amp; Risk Assessment</span
+                            >
+                            <span class="skill-tag">Web App Security</span>
+                            <span class="skill-tag">Cybercrime Law</span>
+                        </div>
+                    </div>
+                    <div class="skill-group reveal">
+                        <div class="skill-group-title">// Development</div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">Spring Boot</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">Vue.js</span>
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">C#</span>
+                            <span class="skill-tag">.NET / Blazor</span>
+                            <span class="skill-tag">Vert.x</span>
+                            <span class="skill-tag">REST APIs</span>
+                            <span class="skill-tag">MySQL</span>
+                        </div>
+                    </div>
+                    <div class="skill-group reveal">
+                        <div class="skill-group-title">// Infrastructure</div>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Linux Server Security</span>
+                            <span class="skill-tag"
+                                >Datacenter Virtualization</span
+                            >
+                            <span class="skill-tag">VMware</span>
+                            <span class="skill-tag"
+                                >Server System Management</span
+                            >
+                            <span class="skill-tag"
+                                >Network Infrastructure Security</span
+                            >
+                            <span class="skill-tag">Git</span>
+                            <span class="skill-tag">Secure Coding</span>
+                            <span class="skill-tag">AI / Prompt Eng.</span>
+                            <span class="skill-tag">Documentation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERIENCE -->
+        <section id="experience">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="section-num">03.</span>
+                    <h2 class="section-title">Experience & Education</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2026 — Present</div>
+                        <div class="timeline-title">
+                            Security Monitoring & Automation Intern
+                        </div>
+                        <div class="timeline-org">
+                            Ministry of Internal Affairs, Moldova — STI (IT
+                            Services)
+                        </div>
+                        <ul class="timeline-desc">
+                            <li>
+                                Supporting operationalisation of MAI's Cyber
+                                Security Center through FortiSIEM.
+                            </li>
+                            <li>
+                                Building and tuning detection rules, reducing
+                                false positives, and supporting SOC operations.
+                            </li>
+                            <li>
+                                Researching EDR platforms (CrowdStrike Falcon),
+                                infrastructure monitoring (Nagios, SNMP), and
+                                enterprise backup solutions.
+                            </li>
+                            <li>
+                                Documenting security architecture for a 300+
+                                device environment.
+                            </li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tl-tag">FortiSIEM</span>
+                            <span class="tl-tag">SIEM</span>
+                            <span class="tl-tag">SOC</span>
+                            <span class="tl-tag">Nagios</span>
+                            <span class="tl-tag">CrowdStrike Falcon</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2023 — 2026</div>
+                        <div class="timeline-title">
+                            Bachelor — Applied Computer Science (Cyber Security)
+                        </div>
+                        <div class="timeline-org">
+                            Howest University of Applied Sciences, Brugge · 180
+                            ECTS
+                        </div>
+                        <ul class="timeline-desc">
+                            <li>
+                                <strong style="color: var(--teal)"
+                                    >Year 1:</strong
+                                >
+                                Cyber Security Fundamentals, Computer Networks,
+                                Web Pentesting Fundamentals, Programming
+                                Fundamentals, OOP, Web Development.
+                            </li>
+                            <li>
+                                <strong style="color: var(--teal)"
+                                    >Year 2:</strong
+                                >
+                                Network &amp; System Pentesting, Web Pentesting
+                                Advanced, Forensic Analysis, Security Management
+                                &amp; Threat/Risk Assessment, Server System
+                                Management, OO Architectures &amp; Secure
+                                Development, Cybercrime, Web Technology Security
+                                &amp; Honeypot.
+                            </li>
+                            <li>
+                                <strong style="color: var(--teal)"
+                                    >Year 3 (current):</strong
+                                >
+                                Cryptography &amp; Privacy, Practical Reverse
+                                Engineering &amp; Malware Analysis, Cyber Threat
+                                Intelligence, Linux Server Security, Network
+                                Infrastructure Security, Datacenter
+                                Virtualization, Security Project, Bachelor
+                                Thesis.
+                            </li>
+                            <li>
+                                Security audit for Brandweer Vlaamse Ardennen —
+                                OSINT, NIS2/GDPR compliance gaps, WordPress
+                                vulnerability analysis.
+                            </li>
+                            <li>
+                                International project at University of
+                                Economics, Katowice, Poland.
+                            </li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tl-tag">Pentesting</span>
+                            <span class="tl-tag">Forensics</span>
+                            <span class="tl-tag">Malware Analysis</span>
+                            <span class="tl-tag">Cryptography</span>
+                            <span class="tl-tag">Threat Intelligence</span>
+                            <span class="tl-tag">Risk Assessment</span>
+                            <span class="tl-tag">Linux Security</span>
+                            <span class="tl-tag">Cybercrime Law</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">Jan 2022 — Jan 2023</div>
+                        <div class="timeline-title">Volunteer</div>
+                        <div class="timeline-org">
+                            Concordia Social Projects, Moldova
+                        </div>
+                        <ul class="timeline-desc">
+                            <li>
+                                Supported children's programs and donation
+                                campaigns.
+                            </li>
+                            <li>
+                                Developed teamwork, communication, and
+                                cross-cultural collaboration skills.
+                            </li>
+                        </ul>
+                        <div class="timeline-tags">
+                            <span class="tl-tag">Volunteering</span>
+                            <span class="tl-tag">Community</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="section-num">04.</span>
+                    <h2 class="section-title">Projects</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="projects-grid">
+                    <div class="project-card reveal">
+                        <div class="project-num">// 01</div>
+                        <div class="project-title">
+                            Mars–Earth Security & Mapping Platform
+                        </div>
+                        <p class="project-desc">
+                            Full-stack web portal for tracking and mapping data
+                            with secure access control. Built a REST API with
+                            authenticated endpoints and documented the full
+                            system architecture and deployment process.
+                        </p>
+                        <div class="project-tech">
+                            <span class="p-tag">Vue.js</span>
+                            <span class="p-tag">Java</span>
+                            <span class="p-tag">Spring Boot</span>
+                            <span class="p-tag">REST API</span>
+                            <span class="p-tag">Access Control</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card reveal">
+                        <div class="project-num">// 02</div>
+                        <div class="project-title">
+                            .NET Blazor Web Application
+                        </div>
+                        <p class="project-desc">
+                            User-authenticated web application for managing and
+                            storing data securely. Implemented session-based
+                            authentication and full CRUD operations, with a
+                            focus on secure data management patterns.
+                        </p>
+                        <div class="project-tech">
+                            <span class="p-tag">.NET</span>
+                            <span class="p-tag">Blazor</span>
+                            <span class="p-tag">C#</span>
+                            <span class="p-tag">Auth Systems</span>
+                            <span class="p-tag">CRUD</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card reveal">
+                        <div class="project-num">// 03</div>
+                        <div class="project-title">SENTINEL SOC Dashboard</div>
+                        <p class="project-desc">
+                            Production-grade React SOC dashboard with live
+                            threat event simulation, SVG network topology, and
+                            animated severity charts. Built with React
+                            performance patterns (memo, useCallback) and WCAG
+                            2.1 AA accessibility compliance.
+                        </p>
+                        <div class="project-tech">
+                            <span class="p-tag">React</span>
+                            <span class="p-tag">SVG</span>
+                            <span class="p-tag">SOC</span>
+                            <span class="p-tag">Threat Simulation</span>
+                            <span class="p-tag">WCAG 2.1 AA</span>
+                        </div>
+                    </div>
+
+                    <div class="project-card reveal">
+                        <div class="project-num">// 04</div>
+                        <div class="project-title">
+                            AI & Low-Code Startup — Katowice
+                        </div>
+                        <p class="project-desc">
+                            Collaborated with international students from
+                            multiple countries to design and prototype an
+                            AI-based business concept. Presented the solution at
+                            the University of Economics in Katowice, Poland.
+                        </p>
+                        <div class="project-tech">
+                            <span class="p-tag">AI</span>
+                            <span class="p-tag">Low-Code</span>
+                            <span class="p-tag">Prototype</span>
+                            <span class="p-tag">International Team</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EVENTS -->
+        <section id="events">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="section-num">05.</span>
+                    <h2 class="section-title">Events & Conferences</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="events-grid">
+                    <div class="event-card reveal">
+                        <div class="event-gallery" data-gallery>
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQGRo0uWDC7epw/feedshare-image-high-res/B4EZtnpWs9JwAo-/0/1766970460786?e=1781740800&v=beta&t=09YMNbXkDGYWChUwQdlYbGk9PyC_qE7GPkKd442dKno"
+                                alt="Tech & Meet: Protecting Belgium"
+                                class="active"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQE6KiDpm0o0Xw/feedshare-shrink_1280/B4EZtnpWseGYAw-/0/1766970459880?e=1781740800&v=beta&t=0Wsf2kbwOVQjCmtY8oYAzv0U55P9fnc7VGu0i0frPKk"
+                                alt="Tech & Meet: Protecting Belgium"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQGX3RzVJA5mRQ/feedshare-shrink_1280/B4EZtnpWsSIQAs-/0/1766970459202?e=1781740800&v=beta&t=Ttb6UaCndaotQrIx3dYoRhcsYsPxiApTkeZD2jA6r0s"
+                                alt="Tech & Meet: Protecting Belgium"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQHIFuJNVbv0Lw/feedshare-shrink_1280/B4EZtnpWwxIoAs-/0/1766970460989?e=1781740800&v=beta&t=ukI8ieGywr9zfROyLFEESO1TrXi411GVazxZcNespAY"
+                                alt="Tech & Meet: Protecting Belgium"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQGSN7FhzExetA/feedshare-shrink_1280/B4EZtnpWxwIsAs-/0/1766970457668?e=1781740800&v=beta&t=T3PsM-7eF6Jln-QGXVTYQjjn7K0NIWCIoh9WXG9hnsg"
+                                alt="Tech & Meet: Protecting Belgium"
+                            />
+                            <button
+                                class="gallery-nav gallery-prev"
+                                aria-label="Previous"
+                            >
+                                &#8249;
+                            </button>
+                            <button
+                                class="gallery-nav gallery-next"
+                                aria-label="Next"
+                            >
+                                &#8250;
+                            </button>
+                            <div class="gallery-dots"></div>
+                        </div>
+                        <div class="event-body">
+                            <div class="event-date">
+                                16 December 2025 · HOWEST, Bruges
+                            </div>
+                            <div class="event-title">
+                                Tech & Meet: "Protecting Belgium — Play a Role
+                                in Active Cyber Protection"
+                            </div>
+                            <p class="event-desc">
+                                Explored how Belgium's Anti-Phishing Shield
+                                (BAPS) redirects users away from malicious sites
+                                at the DNS level, and how the National Cyber
+                                Emergency Plan coordinates crisis response
+                                across the NCCN, the Centre for Cybersecurity
+                                Belgium (CCB), and other partners.
+                            </p>
+                            <a
+                                href="https://www.linkedin.com/posts/victor-rogoz_howest-techandmeet-cybersecurity-activity-7411211285327101952-muim"
+                                target="_blank"
+                                rel="noopener"
+                                class="event-link"
+                                >&#9656; View LinkedIn post</a
+                            >
+                        </div>
+                    </div>
+
+                    <div class="event-card reveal">
+                        <div class="event-gallery" data-gallery>
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQEgXgUzXBdIUA/feedshare-image-high-res/B4EZskxF1xGUAo-/0/1765848418287?e=1781740800&v=beta&t=w9BmnaZ2YJ5J-eJADH5hirCTUuuD2bZqYomEiy57XnI"
+                                alt="Tech & Meet: NATO Cyber Defence"
+                                class="active"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQEsEa12hWFDHw/feedshare-shrink_800/B4EZskxF15GUAg-/0/1765848426231?e=1781740800&v=beta&t=36CLdEgxuqxRc51m44IhWeQL1962pxhaLEBqSI2zVWw"
+                                alt="Tech & Meet: NATO Cyber Defence"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQGJD_-EWtAb_Q/feedshare-shrink_1280/B4EZskxF1.JQAs-/0/1765848411265?e=1781740800&v=beta&t=us7-ntuZM0ExqJue15ScOIMIdEkZZ3SLdPhAPYyuNqY"
+                                alt="Tech & Meet: NATO Cyber Defence"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQG24uLI2A5I3Q/feedshare-shrink_480/B4EZskxF1UHcAY-/0/1765848411240?e=1781740800&v=beta&t=-kmak2_eYlE_cqplYICS6tVfECd1zt5oY3e3R8hPQog"
+                                alt="Tech & Meet: NATO Cyber Defence"
+                            />
+                            <button
+                                class="gallery-nav gallery-prev"
+                                aria-label="Previous"
+                            >
+                                &#8249;
+                            </button>
+                            <button
+                                class="gallery-nav gallery-next"
+                                aria-label="Next"
+                            >
+                                &#8250;
+                            </button>
+                            <div class="gallery-dots"></div>
+                        </div>
+                        <div class="event-body">
+                            <div class="event-date">
+                                2 December 2025 · HOWEST, Bruges
+                            </div>
+                            <div class="event-title">
+                                Tech & Meet: NATO's Cyber Defence Evolution
+                            </div>
+                            <p class="event-desc">
+                                Attended a session by Martin De Pauw on how
+                                cyber became a real defence domain. Key topics
+                                included the NATO Integrated Cyber Defence
+                                Centre (NICC), civil-military cooperation, zero
+                                trust as a baseline mindset, and how AI is
+                                shaping both offensive and defensive cyber
+                                operations.
+                            </p>
+                            <a
+                                href="https://www.linkedin.com/posts/victor-rogoz_on-2-%F0%9D%90%83%F0%9D%90%9E%F0%9D%90%9C%F0%9D%90%9E%F0%9D%90%A6%F0%9D%90%9B%F0%9D%90%9E%F0%9D%90%AB-i-went-to-a-tech-activity-7406505158752313344-BESv"
+                                target="_blank"
+                                rel="noopener"
+                                class="event-link"
+                                >&#9656; View LinkedIn post</a
+                            >
+                        </div>
+                    </div>
+
+                    <div class="event-card reveal">
+                        <div class="event-gallery" data-gallery>
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQHO98lmY3baCw/feedshare-shrink_1280/B4EZrAOGU6HMAs-/0/1764161519953?e=1781740800&v=beta&t=eJJ0r2rE5ouwLaHNZ4OdTI5rL39aTEHu1vML-oSdkPg"
+                                alt="Tech & Meet: IPv6"
+                                class="active"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQHfAwgV_-H74Q/feedshare-shrink_480/B4EZrAOGVAHcAY-/0/1764161521912?e=1781740800&v=beta&t=4EVLcW4xQD-zHM8G8pZcP2hTjoxhfQLo-v-NW_mKdyw"
+                                alt="Tech & Meet: IPv6"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQHPbNvTyGdadQ/feedshare-shrink_800/B4EZrAOGTkJ0Ag-/0/1764161513683?e=1781740800&v=beta&t=WTBhewm_TWWarCSrXqFqDmVHT0M4ViC9LzvjJCFYFGQ"
+                                alt="Tech & Meet: IPv6"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQGo2dwGh_DBcw/feedshare-shrink_160/B4EZrAOGUdIIAc-/0/1764161516959?e=1781740800&v=beta&t=VlguJ9x_F8JtuJkxw6yDm2cKnjoD0oOrmG3ta86OQ_g"
+                                alt="Tech & Meet: IPv6"
+                            />
+                            <button
+                                class="gallery-nav gallery-prev"
+                                aria-label="Previous"
+                            >
+                                &#8249;
+                            </button>
+                            <button
+                                class="gallery-nav gallery-next"
+                                aria-label="Next"
+                            >
+                                &#8250;
+                            </button>
+                            <div class="gallery-dots"></div>
+                        </div>
+                        <div class="event-body">
+                            <div class="event-date">
+                                26 November 2025 · HOWEST, Bruges
+                            </div>
+                            <div class="event-title">
+                                Tech & Meet: IPv6 — Security, Dual-Stack & the
+                                Road Ahead
+                            </div>
+                            <p class="event-desc">
+                                Session with Nico Declerck on the reality that
+                                IPv6 is already in our networks but often
+                                unmonitored. Covered how dual-stack quietly
+                                expands the attack surface, the absence of
+                                classic NAT, SLAAC implications, and why an
+                                IPv6-only architecture may actually be safer
+                                than dragging both protocols along.
+                            </p>
+                            <a
+                                href="https://www.linkedin.com/posts/victor-rogoz_ipv6-networking-cybersecurity-activity-7399429736919252992-TCGP"
+                                target="_blank"
+                                rel="noopener"
+                                class="event-link"
+                                >&#9656; View LinkedIn post</a
+                            >
+                        </div>
+                    </div>
+
+                    <div class="event-card reveal">
+                        <div class="event-gallery" data-gallery>
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQEX4pdmMu_jXQ/feedshare-shrink_800/B4EZqX7zf4GoAg-/0/1763485637207?e=1781740800&v=beta&t=Ain40FeUCFVT8rVZfM4mW__6prG7F0y9KRhYCZWqreA"
+                                alt="Hack The Future 2025"
+                                class="active"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQGloU_1sUEEjA/feedshare-shrink_1280/B4EZqX7zevIIAs-/0/1763485632280?e=1781740800&v=beta&t=BC7P-RzXeE7Bgc3cZ1wOA1cX96i91jvfkd1y8vbxCpY"
+                                alt="Hack The Future 2025"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQE-1_UTQh-WMQ/feedshare-shrink_1280/B4EZqX7zecIUAs-/0/1763485638396?e=1781740800&v=beta&t=HziQrNSC1cXuE1fr272cg9D6E-7XJ4CCwjEiCChALNY"
+                                alt="Hack The Future 2025"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQFNNsrlNpAoSQ/feedshare-shrink_1280/B4EZqX7zgFJgAs-/0/1763485646778?e=1781740800&v=beta&t=qKvHDAJxY3q5LGoXYcQITZ5JvBIAlO0eti6qFp6qRm8"
+                                alt="Hack The Future 2025"
+                            />
+                            <button
+                                class="gallery-nav gallery-prev"
+                                aria-label="Previous"
+                            >
+                                &#8249;
+                            </button>
+                            <button
+                                class="gallery-nav gallery-next"
+                                aria-label="Next"
+                            >
+                                &#8250;
+                            </button>
+                            <div class="gallery-dots"></div>
+                        </div>
+                        <div class="event-body">
+                            <div class="event-date">
+                                12 November 2025 · Antwerp
+                            </div>
+                            <div class="event-title">
+                                Hack The Future 2025 — "SeaFence Inc.: Rush to
+                                the Bottom"
+                            </div>
+                            <p class="event-desc">
+                                Joined solo and took on challenge #116 organized
+                                by The Beehive: building a Java bot to keep a
+                                submarine alive through hundreds of rounds of
+                                randomized events. A full day of algorithm
+                                design, strategy, and debugging under time
+                                pressure with direct feedback from industry
+                                coaches.
+                            </p>
+                            <a
+                                href="https://www.linkedin.com/posts/victor-rogoz_hackthefuture-aquatopia-thebeehive-activity-7396594909916340224-joVs"
+                                target="_blank"
+                                rel="noopener"
+                                class="event-link"
+                                >&#9656; View LinkedIn post</a
+                            >
+                        </div>
+                    </div>
+
+                    <div class="event-card reveal">
+                        <div class="event-gallery" data-gallery>
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQFnKbKX5MR3ZA/feedshare-image-high-res/B4EZnjlxCEKkAo-/0/1760459953410?e=1781740800&v=beta&t=7OO3rmgwEnb-2nw-Mz0XRcW7PG9I_JYYozCXjI3cchU"
+                                alt="Tech & Meet: Threat Intelligence"
+                                class="active"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQGshLhpR6CDzw/feedshare-shrink_800/B4EZnjlxC_GoAg-/0/1760459953402?e=1781740800&v=beta&t=Lur6CYsUjpFt_EXD_Quumwg2pEOGI8WIQgXC29VQPrg"
+                                alt="Tech & Meet: Threat Intelligence"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQEu7I4NC1sWMw/feedshare-image-high-res/B4EZnjlxCmKwAs-/0/1760459953342?e=1781740800&v=beta&t=ukFcFNfz925WaRJOsoHJykcJAf49NMq1N4BRWiVXfx8"
+                                alt="Tech & Meet: Threat Intelligence"
+                            />
+                            <img
+                                src="https://media.licdn.com/dms/image/v2/D4E22AQG36J4FOmKOlQ/feedshare-shrink_160/B4EZnjlxCdHMAc-/0/1760459953446?e=1781740800&v=beta&t=Ypk-jL6cuwz8HrUXSDwoDpkAxgnSsSUmHr9rrCH9zx8"
+                                alt="Tech & Meet: Threat Intelligence"
+                            />
+                            <button
+                                class="gallery-nav gallery-prev"
+                                aria-label="Previous"
+                            >
+                                &#8249;
+                            </button>
+                            <button
+                                class="gallery-nav gallery-next"
+                                aria-label="Next"
+                            >
+                                &#8250;
+                            </button>
+                            <div class="gallery-dots"></div>
+                        </div>
+                        <div class="event-body">
+                            <div class="event-date">
+                                7 October 2025 · HOWEST, Bruges
+                            </div>
+                            <div class="event-title">
+                                Tech & Meet: "Threat Intelligence — From Threats
+                                to Tactics"
+                            </div>
+                            <p class="event-desc">
+                                Learned how Cyber Threat Intelligence (CTI)
+                                helps organizations detect attacks before they
+                                happen. Sandro Manzo and Niels Desloover from
+                                the Centre for Cybersecurity Belgium (CyTRIS)
+                                shared real-world stories on proactive
+                                intelligence and the importance of spear
+                                phishing awareness and early detection.
+                            </p>
+                            <a
+                                href="https://www.linkedin.com/posts/victor-rogoz_cybersecurity-threatintelligence-cti-activity-7383904235869908994-Yzqn"
+                                target="_blank"
+                                rel="noopener"
+                                class="event-link"
+                                >&#9656; View LinkedIn post</a
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CERTIFICATIONS -->
+        <section id="certifications">
+            <div class="container">
+                <div class="section-head reveal">
+                    <span class="section-num">06.</span>
+                    <h2 class="section-title">Certifications</h2>
+                    <div class="section-line"></div>
+                </div>
+                <div class="cert-grid">
+                    <div class="cert-card reveal" data-cert="ecc">
+                        <div class="cert-icon">🛡️</div>
+                        <div>
+                            <div class="cert-name">
+                                CEH — Certified Ethical Hacker
+                            </div>
+                            <div class="cert-meta">
+                                EC-Council · CEH · Issued: 20 Feb 2026 ·
+                                #ECC6741930852
+                            </div>
+                            <div class="cert-view-hint">
+                                ▸ click to view certificate
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cert-card reveal" data-cert="katowice">
+                        <div class="cert-icon">🤖</div>
+                        <div>
+                            <div class="cert-name">
+                                Start Your Business Using AI &amp; Low-Code
+                            </div>
+                            <div class="cert-meta">
+                                March 2025 · University of Economics, Katowice
+                            </div>
+                            <div class="cert-view-hint">
+                                ▸ click to view certificate
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cert-card reveal" data-cert="concordia">
+                        <div class="cert-icon">🤝</div>
+                        <div>
+                            <div class="cert-name">
+                                Concordia Social Projects — Participation
+                            </div>
+                            <div class="cert-meta">
+                                Oct 2022 · Bullying Identification, Prevention
+                                &amp; Reporting
+                            </div>
+                            <div class="cert-view-hint">
+                                ▸ click to view certificate
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cert-card reveal" data-cert="cambridge">
+                        <div class="cert-icon">🇬🇧</div>
+                        <div>
+                            <div class="cert-name">
+                                Cambridge B2 First (FCE)
+                            </div>
+                            <div class="cert-meta">
+                                Cambridge Assessment English · April 2023 ·
+                                Score: 160
+                            </div>
+                            <div class="cert-view-hint">
+                                ▸ click to view certificate
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT -->
+        <section id="contact">
+            <div class="container">
+                <div class="contact-inner">
+                    <div
+                        class="section-head reveal"
+                        style="justify-content: center"
+                    >
+                        <span class="section-num">07.</span>
+                        <h2 class="section-title">Get In Touch</h2>
+                    </div>
+                    <p class="contact-lead reveal">
+                        Graduating with a BSc in Cybersecurity in 2026 and
+                        actively looking for roles in
+                        <strong
+                            >SOC analysis, penetration testing, or application
+                            security</strong
+                        >. CEH certified, with real-world SIEM and secure
+                        development experience. Open to positions across Europe.
+                    </p>
+                    <div class="contact-links reveal">
+                        <a
+                            href="mailto:victor.rogoz2@gmail.com"
+                            class="contact-link"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path
+                                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                                />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                            victor.rogoz2@gmail.com
+                        </a>
+                        <a
+                            href="https://www.linkedin.com/in/victor-rogoz/"
+                            target="_blank"
+                            rel="noopener"
+                            class="contact-link"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"
+                                />
+                                <rect x="2" y="9" width="4" height="12" />
+                                <circle cx="4" cy="4" r="2" />
+                            </svg>
+                            LinkedIn
+                        </a>
+                        <a href="tel:+37367275055" class="contact-link">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <path
+                                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.31 2 2 0 0 1 3.6 1.13h3a2 2 0 0 1 2 1.72c.13.97.36 1.93.68 2.85a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 5.35 5.35l.96-.96a2 2 0 0 1 2.11-.45c.92.32 1.88.55 2.85.68A2 2 0 0 1 21 16.92z"
+                                />
+                            </svg>
+                            +373 67 275 055
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>
+                Designed & built by <span>Victor Rogoz</span> · 2026 · Brugge,
+                Belgium
+            </p>
+        </footer>
+
+        <!-- CERT MODAL -->
+        <div
+            id="cert-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title-text"
+        >
+            <div class="modal-box">
+                <div class="modal-header">
+                    <span class="modal-title" id="modal-title-text"
+                        >Certificate</span
+                    >
+                    <button
+                        class="modal-close"
+                        id="modal-close-btn"
+                        aria-label="Close"
+                    >
+                        ✕
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <iframe
+                        id="cert-iframe"
+                        title="Certificate PDF"
+                        src=""
+                    ></iframe>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <div class="hero-terminal">
-        <div class="terminal-header">
-          <div class="dot dot-red"></div>
-          <div class="dot dot-yellow"></div>
-          <div class="dot dot-green"></div>
-          <span class="terminal-title">victor@portfolio ~ zsh</span>
-        </div>
-        <div class="terminal-body">
-          <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">whoami</span></span>
-          <span class="t-line"><span class="t-out">victor_rogoz</span></span>
-          <span class="t-line">&nbsp;</span>
-          <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">cat profile.json</span></span>
-          <span class="t-line"><span class="t-out">{</span></span>
-          <span class="t-line"><span class="t-out">&nbsp; <span class="t-val">"degree"</span>:&nbsp;<span class="t-str">"BSc Cybersecurity, Howest"</span>,</span></span>
-          <span class="t-line"><span class="t-out">&nbsp; <span class="t-val">"cert"</span>:&nbsp;<span class="t-str">"CEH"</span>,</span></span>
-          <span class="t-line"><span class="t-out">&nbsp; <span class="t-val">"focus"</span>:&nbsp;<span class="t-str">"threat_detection · pentest · soc"</span>,</span></span>
-          <span class="t-line"><span class="t-out">&nbsp; <span class="t-val">"siem"</span>:&nbsp;<span class="t-str">"FortiSIEM"</span>,</span></span>
-          <span class="t-line"><span class="t-out">&nbsp; <span class="t-val">"status"</span>:&nbsp;<span class="t-str">"open_to_work"</span></span></span>
-          <span class="t-line"><span class="t-out">}</span></span>
-          <span class="t-line">&nbsp;</span>
-          <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">nmap --open <span class="t-num">interests</span></span><span class="cursor"></span></span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+        <script>
+            // Embedded certificate PDFs (base64)
+            const CERTS = {
+                cambridge: {
+                    title: "Cambridge B2 First — Victor Rogoz",
+                    path: "certs/Cambridge.pdf",
+                },
+                ecc: {
+                    title: "Certified Ethical Hacker — EC-Council",
+                    path: "certs/ECC-CEH-Certificate.pdf",
+                },
+                katowice: {
+                    title: "AI & Low-Code — University of Economics, Katowice",
+                    path: "certs/Katowice_Low-Code.pdf",
+                },
+                concordia: {
+                    title: "Concordia Social Projects — Certificate of Participation",
+                    path: "certs/Concordia.pdf",
+                },
+            };
 
-<!-- ABOUT -->
-<section id="about">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="section-num">01.</span>
-      <h2 class="section-title">About Me</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="about-grid">
-      <div class="about-text reveal">
-        <p>
-          I'm finishing a <strong>Bachelor's in Cybersecurity</strong> at Howest University of Applied Sciences in Bruges, graduating in 2026 — with a <strong>CEH (Certified Ethical Hacker)</strong> already under my belt.
-        </p>
-        <p>
-          My studies cover the full offensive and defensive spectrum: <strong>Web &amp; Network Pentesting, Malware Analysis, Reverse Engineering, Cyber Threat Intelligence, Forensics, Cryptography, Linux Server Security</strong>, and Cybercrime Legislation. I don't just study it — I apply it. My group security audit for a Belgian fire department uncovered OSINT exposure, NIS2/GDPR gaps, and active WordPress vulnerabilities.
-        </p>
-        <p>
-          For my final-year internship I'm embedded at the <strong>Ministry of Internal Affairs of Moldova</strong>, helping stand up their Cyber Security Center. My focus is <strong>SIEM operations with FortiSIEM</strong> — writing detection rules, cutting false positives, and building the monitoring foundation for their SOC.
-        </p>
-        <p>
-          What sets me apart: a <strong>developer background that makes me a better attacker</strong>. I understand how apps are built, which means I know exactly where they break. Romanian native, C1 Russian, B2 English (Cambridge certified).
-        </p>
-      </div>
-      <div class="stat-grid reveal">
-        <div class="stat-card">
-          <div class="stat-num">CEH</div>
-          <div class="stat-label">Certified Ethical Hacker</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">SOC</div>
-          <div class="stat-label">FortiSIEM Operator</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">MAI</div>
-          <div class="stat-label">Current Internship</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">2026</div>
-          <div class="stat-label">Graduation Year</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+            const modal = document.getElementById("cert-modal");
+            const iframe = document.getElementById("cert-iframe");
+            const modalTitle = document.getElementById("modal-title-text");
+            const closeBtn = document.getElementById("modal-close-btn");
 
-<!-- SKILLS -->
-<section id="skills">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="section-num">02.</span>
-      <h2 class="section-title">Skills & Tools</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-group reveal">
-        <div class="skill-group-title">// Security</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Penetration Testing</span>
-          <span class="skill-tag">Web Pentesting (Adv.)</span>
-          <span class="skill-tag">Network &amp; System Pentesting</span>
-          <span class="skill-tag">Malware Analysis</span>
-          <span class="skill-tag">Reverse Engineering</span>
-          <span class="skill-tag">Cyber Threat Intelligence</span>
-          <span class="skill-tag">Digital Forensics</span>
-          <span class="skill-tag">SIEM / FortiSIEM</span>
-          <span class="skill-tag">Burp Suite</span>
-          <span class="skill-tag">Wireshark</span>
-          <span class="skill-tag">Cryptography</span>
-          <span class="skill-tag">Threat &amp; Risk Assessment</span>
-          <span class="skill-tag">Web App Security</span>
-          <span class="skill-tag">Cybercrime Law</span>
-        </div>
-      </div>
-      <div class="skill-group reveal">
-        <div class="skill-group-title">// Development</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Java</span>
-          <span class="skill-tag">Spring Boot</span>
-          <span class="skill-tag">JavaScript</span>
-          <span class="skill-tag">Vue.js</span>
-          <span class="skill-tag">Python</span>
-          <span class="skill-tag">C#</span>
-          <span class="skill-tag">.NET / Blazor</span>
-          <span class="skill-tag">Vert.x</span>
-          <span class="skill-tag">REST APIs</span>
-          <span class="skill-tag">MySQL</span>
-        </div>
-      </div>
-      <div class="skill-group reveal">
-        <div class="skill-group-title">// Infrastructure</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Linux Server Security</span>
-          <span class="skill-tag">Datacenter Virtualization</span>
-          <span class="skill-tag">VMware</span>
-          <span class="skill-tag">Server System Management</span>
-          <span class="skill-tag">Network Infrastructure Security</span>
-          <span class="skill-tag">Git</span>
-          <span class="skill-tag">Secure Coding</span>
-          <span class="skill-tag">AI / Prompt Eng.</span>
-          <span class="skill-tag">Documentation</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+            function openCert(key) {
+                const cert = CERTS[key];
+                if (!cert) return;
+                modalTitle.textContent = cert.title;
+                iframe.src = cert.path;
+                modal.classList.add("open");
+                document.body.style.overflow = "hidden";
+            }
 
-<!-- EXPERIENCE -->
-<section id="experience">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="section-num">03.</span>
-      <h2 class="section-title">Experience & Education</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="timeline">
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">2026 — Present</div>
-        <div class="timeline-title">Security Monitoring & Automation Intern</div>
-        <div class="timeline-org">Ministry of Internal Affairs, Moldova — STI (IT Services)</div>
-        <ul class="timeline-desc">
-          <li>Supporting operationalisation of MAI's Cyber Security Center through FortiSIEM.</li>
-          <li>Building and tuning detection rules, reducing false positives, and supporting SOC operations.</li>
-          <li>Researching EDR platforms (CrowdStrike Falcon), infrastructure monitoring (Nagios, SNMP), and enterprise backup solutions.</li>
-          <li>Documenting security architecture for a 300+ device environment.</li>
-        </ul>
-        <div class="timeline-tags">
-          <span class="tl-tag">FortiSIEM</span>
-          <span class="tl-tag">SIEM</span>
-          <span class="tl-tag">SOC</span>
-          <span class="tl-tag">Nagios</span>
-          <span class="tl-tag">CrowdStrike Falcon</span>
-        </div>
-      </div>
+            function closeCert() {
+                modal.classList.remove("open");
+                iframe.src = "";
+                document.body.style.overflow = "";
+            }
 
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">2023 — 2026</div>
-        <div class="timeline-title">Bachelor — Applied Computer Science (Cyber Security)</div>
-        <div class="timeline-org">Howest University of Applied Sciences, Brugge · 180 ECTS</div>
-        <ul class="timeline-desc">
-          <li><strong style="color:var(--teal)">Year 1:</strong> Cyber Security Fundamentals, Computer Networks, Web Pentesting Fundamentals, Programming Fundamentals, OOP, Web Development.</li>
-          <li><strong style="color:var(--teal)">Year 2:</strong> Network &amp; System Pentesting, Web Pentesting Advanced, Forensic Analysis, Security Management &amp; Threat/Risk Assessment, Server System Management, OO Architectures &amp; Secure Development, Cybercrime, Web Technology Security &amp; Honeypot.</li>
-          <li><strong style="color:var(--teal)">Year 3 (current):</strong> Cryptography &amp; Privacy, Practical Reverse Engineering &amp; Malware Analysis, Cyber Threat Intelligence, Linux Server Security, Network Infrastructure Security, Datacenter Virtualization, Security Project, Bachelor Thesis.</li>
-          <li>Security audit for Brandweer Vlaamse Ardennen — OSINT, NIS2/GDPR compliance gaps, WordPress vulnerability analysis.</li>
-          <li>International project at University of Economics, Katowice, Poland.</li>
-        </ul>
-        <div class="timeline-tags">
-          <span class="tl-tag">Pentesting</span>
-          <span class="tl-tag">Forensics</span>
-          <span class="tl-tag">Malware Analysis</span>
-          <span class="tl-tag">Cryptography</span>
-          <span class="tl-tag">Threat Intelligence</span>
-          <span class="tl-tag">Risk Assessment</span>
-          <span class="tl-tag">Linux Security</span>
-          <span class="tl-tag">Cybercrime Law</span>
-        </div>
-      </div>
+            closeBtn.addEventListener("click", closeCert);
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) closeCert();
+            });
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeCert();
+            });
 
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-date">Jan 2022 — Jan 2023</div>
-        <div class="timeline-title">Volunteer</div>
-        <div class="timeline-org">Concordia Social Projects, Moldova</div>
-        <ul class="timeline-desc">
-          <li>Supported children's programs and donation campaigns.</li>
-          <li>Developed teamwork, communication, and cross-cultural collaboration skills.</li>
-        </ul>
-        <div class="timeline-tags">
-          <span class="tl-tag">Volunteering</span>
-          <span class="tl-tag">Community</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+            // Event delegation — works regardless of injection timing
+            document.addEventListener("click", (e) => {
+                const card = e.target.closest(".cert-card[data-cert]");
+                if (card) openCert(card.dataset.cert);
+            });
+        </script>
 
-<!-- PROJECTS -->
-<section id="projects">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="section-num">04.</span>
-      <h2 class="section-title">Projects</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="projects-grid">
+        <script>
+            // Gallery carousels
+            document.querySelectorAll("[data-gallery]").forEach((gallery) => {
+                const imgs = gallery.querySelectorAll("img");
+                const dotsContainer = gallery.querySelector(".gallery-dots");
+                let current = 0;
 
-      <div class="project-card reveal">
-        <div class="project-num">// 01</div>
-        <div class="project-title">Mars–Earth Security & Mapping Platform</div>
-        <p class="project-desc">
-          Full-stack web portal for tracking and mapping data with secure access control. Built a REST API with authenticated endpoints and documented the full system architecture and deployment process.
-        </p>
-        <div class="project-tech">
-          <span class="p-tag">Vue.js</span>
-          <span class="p-tag">Java</span>
-          <span class="p-tag">Spring Boot</span>
-          <span class="p-tag">REST API</span>
-          <span class="p-tag">Access Control</span>
-        </div>
-      </div>
+                imgs.forEach((_, i) => {
+                    const dot = document.createElement("span");
+                    dot.className = "gallery-dot" + (i === 0 ? " active" : "");
+                    dot.addEventListener("click", () => goTo(i));
+                    dotsContainer.appendChild(dot);
+                });
 
-      <div class="project-card reveal">
-        <div class="project-num">// 02</div>
-        <div class="project-title">.NET Blazor Web Application</div>
-        <p class="project-desc">
-          User-authenticated web application for managing and storing data securely. Implemented session-based authentication and full CRUD operations, with a focus on secure data management patterns.
-        </p>
-        <div class="project-tech">
-          <span class="p-tag">.NET</span>
-          <span class="p-tag">Blazor</span>
-          <span class="p-tag">C#</span>
-          <span class="p-tag">Auth Systems</span>
-          <span class="p-tag">CRUD</span>
-        </div>
-      </div>
+                function goTo(idx) {
+                    imgs[current].classList.remove("active");
+                    dotsContainer.children[current].classList.remove("active");
+                    current = (idx + imgs.length) % imgs.length;
+                    imgs[current].classList.add("active");
+                    dotsContainer.children[current].classList.add("active");
+                }
 
-      <div class="project-card reveal">
-        <div class="project-num">// 03</div>
-        <div class="project-title">SENTINEL SOC Dashboard</div>
-        <p class="project-desc">
-          Production-grade React SOC dashboard with live threat event simulation, SVG network topology, and animated severity charts. Built with React performance patterns (memo, useCallback) and WCAG 2.1 AA accessibility compliance.
-        </p>
-        <div class="project-tech">
-          <span class="p-tag">React</span>
-          <span class="p-tag">SVG</span>
-          <span class="p-tag">SOC</span>
-          <span class="p-tag">Threat Simulation</span>
-          <span class="p-tag">WCAG 2.1 AA</span>
-        </div>
-      </div>
+                gallery
+                    .querySelector(".gallery-prev")
+                    .addEventListener("click", () => goTo(current - 1));
+                gallery
+                    .querySelector(".gallery-next")
+                    .addEventListener("click", () => goTo(current + 1));
+            });
 
-      <div class="project-card reveal">
-        <div class="project-num">// 04</div>
-        <div class="project-title">AI & Low-Code Startup — Katowice</div>
-        <p class="project-desc">
-          Collaborated with international students from multiple countries to design and prototype an AI-based business concept. Presented the solution at the University of Economics in Katowice, Poland.
-        </p>
-        <div class="project-tech">
-          <span class="p-tag">AI</span>
-          <span class="p-tag">Low-Code</span>
-          <span class="p-tag">Prototype</span>
-          <span class="p-tag">International Team</span>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- CERTIFICATIONS -->
-<section id="certifications">
-  <div class="container">
-    <div class="section-head reveal">
-      <span class="section-num">05.</span>
-      <h2 class="section-title">Certifications</h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="cert-grid">
-      <div class="cert-card reveal" data-cert="ecc">
-        <div class="cert-icon">🛡️</div>
-        <div>
-          <div class="cert-name">CEH — Certified Ethical Hacker</div>
-          <div class="cert-meta">EC-Council · CEH · Issued: 20 Feb 2026 · #ECC6741930852</div>
-          <div class="cert-view-hint">▸ click to view certificate</div>
-        </div>
-      </div>
-      <div class="cert-card reveal" data-cert="katowice">
-        <div class="cert-icon">🤖</div>
-        <div>
-          <div class="cert-name">Start Your Business Using AI &amp; Low-Code</div>
-          <div class="cert-meta">March 2025 · University of Economics, Katowice</div>
-          <div class="cert-view-hint">▸ click to view certificate</div>
-        </div>
-      </div>
-      <div class="cert-card reveal" data-cert="concordia">
-        <div class="cert-icon">🤝</div>
-        <div>
-          <div class="cert-name">Concordia Social Projects — Participation</div>
-          <div class="cert-meta">Oct 2022 · Bullying Identification, Prevention &amp; Reporting</div>
-          <div class="cert-view-hint">▸ click to view certificate</div>
-        </div>
-      </div>
-      <div class="cert-card reveal" data-cert="cambridge">
-        <div class="cert-icon">🇬🇧</div>
-        <div>
-          <div class="cert-name">Cambridge B2 First (FCE)</div>
-          <div class="cert-meta">Cambridge Assessment English · April 2023 · Score: 160</div>
-          <div class="cert-view-hint">▸ click to view certificate</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact">
-  <div class="container">
-    <div class="contact-inner">
-      <div class="section-head reveal" style="justify-content:center;">
-        <span class="section-num">06.</span>
-        <h2 class="section-title">Get In Touch</h2>
-      </div>
-      <p class="contact-lead reveal">
-        Graduating with a BSc in Cybersecurity in 2026 and actively looking for roles in <strong>SOC analysis, penetration testing, or application security</strong>. CEH certified, with real-world SIEM and secure development experience. Open to positions across Europe.
-      </p>
-      <div class="contact-links reveal">
-        <a href="mailto:victor.rogoz2@gmail.com" class="contact-link">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          victor.rogoz2@gmail.com
-        </a>
-        <a href="https://www.linkedin.com/in/victor-rogoz/" target="_blank" rel="noopener" class="contact-link">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          LinkedIn
-        </a>
-        <a href="tel:+37367275055" class="contact-link">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.31 2 2 0 0 1 3.6 1.13h3a2 2 0 0 1 2 1.72c.13.97.36 1.93.68 2.85a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 5.35 5.35l.96-.96a2 2 0 0 1 2.11-.45c.92.32 1.88.55 2.85.68A2 2 0 0 1 21 16.92z"/></svg>
-          +373 67 275 055
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <p>Designed & built by <span>Victor Rogoz</span> · 2026 · Brugge, Belgium</p>
-</footer>
-
-
-<!-- CERT MODAL -->
-<div id="cert-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title-text">
-  <div class="modal-box">
-    <div class="modal-header">
-      <span class="modal-title" id="modal-title-text">Certificate</span>
-      <button class="modal-close" id="modal-close-btn" aria-label="Close">✕</button>
-    </div>
-    <div class="modal-body">
-      <iframe id="cert-iframe" title="Certificate PDF" src=""></iframe>
-    </div>
-  </div>
-</div>
-
-<script>
-  // Embedded certificate PDFs (base64)
-  const CERTS = {
-    cambridge: { title: 'Cambridge B2 First — Victor Rogoz',                          path: 'certs/Cambridge.pdf' },
-    ecc:       { title: 'Certified Ethical Hacker — EC-Council',                        path: 'certs/ECC-CEH-Certificate.pdf' },
-    katowice:  { title: 'AI & Low-Code — University of Economics, Katowice',           path: 'certs/Katowice_Low-Code.pdf' },
-    concordia: { title: 'Concordia Social Projects — Certificate of Participation',    path: 'certs/Concordia.pdf' },
-  };
-
-  const modal     = document.getElementById('cert-modal');
-  const iframe    = document.getElementById('cert-iframe');
-  const modalTitle = document.getElementById('modal-title-text');
-  const closeBtn  = document.getElementById('modal-close-btn');
-
-  function openCert(key) {
-    const cert = CERTS[key];
-    if (!cert) return;
-    modalTitle.textContent = cert.title;
-    iframe.src = cert.path;
-    modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeCert() {
-    modal.classList.remove('open');
-    iframe.src = '';
-    document.body.style.overflow = '';
-  }
-
-  closeBtn.addEventListener('click', closeCert);
-  modal.addEventListener('click', e => { if (e.target === modal) closeCert(); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCert(); });
-
-  // Event delegation — works regardless of injection timing
-  document.addEventListener('click', e => {
-    const card = e.target.closest('.cert-card[data-cert]');
-    if (card) openCert(card.dataset.cert);
-  });
-</script>
-
-<script>
-  // Nav highlight on scroll
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-links a');
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(sec => {
-      if (window.scrollY >= sec.offsetTop - 120) current = sec.getAttribute('id');
-    });
-    navLinks.forEach(link => {
-      link.style.color = link.getAttribute('href') === '#' + current ? 'var(--teal)' : '';
-    });
-  }, { passive: true });
-</script>
-</body>
+            // Nav highlight on scroll
+            const sections = document.querySelectorAll("section[id]");
+            const navLinks = document.querySelectorAll(".nav-links a");
+            window.addEventListener(
+                "scroll",
+                () => {
+                    let current = "";
+                    sections.forEach((sec) => {
+                        if (window.scrollY >= sec.offsetTop - 120)
+                            current = sec.getAttribute("id");
+                    });
+                    navLinks.forEach((link) => {
+                        link.style.color =
+                            link.getAttribute("href") === "#" + current
+                                ? "var(--teal)"
+                                : "";
+                    });
+                },
+                { passive: true },
+            );
+        </script>
+    </body>
 </html>
